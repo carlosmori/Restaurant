@@ -20,6 +20,7 @@ import Kitchen from './kitchen/Kitchen'
 import Billing from './billing/Billing'
 import Reports from './reports/Reports'
 import Users from './users/Users'
+import { connect } from 'react-redux'
 
 function Copyright() {
   return (
@@ -115,7 +116,7 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-export default function Dashboard(props) {
+const Dashboard = props => {
   const classes = useStyles()
   const [open, setOpen] = React.useState(true)
   const handleDrawerOpen = () => {
@@ -124,11 +125,9 @@ export default function Dashboard(props) {
   const handleDrawerClose = () => {
     setOpen(false)
   }
-  // useEffect(() => {
-  //   console.log(this)
-  //   console.log('this')
-  //   return () => {}
-  // }, [])
+  useEffect(() => {
+    return () => {}
+  })
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -156,7 +155,7 @@ export default function Dashboard(props) {
             noWrap
             className={classes.title}
           >
-            Dashboard
+            {props.dashboardTitle}
           </Typography>
         </Toolbar>
       </AppBar>
@@ -190,3 +189,11 @@ export default function Dashboard(props) {
     </div>
   )
 }
+
+const mapStateToProps = state => ({
+  dashboardTitle: state.navigationList.currentTab,
+})
+export default connect(
+  mapStateToProps,
+  null
+)(Dashboard)
