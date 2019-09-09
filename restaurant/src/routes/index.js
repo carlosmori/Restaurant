@@ -1,0 +1,6 @@
+export const tables = '/Dashboard/Tables'
+export const orders = '/Dashboard/Orders'
+export const kitchen = '/Dashboard/Kitchen'
+export const billing = '/Dashboard/Billing'
+export const reports = '/Dashboard/Reports'
+export const users = '/Dashboard/Users'
