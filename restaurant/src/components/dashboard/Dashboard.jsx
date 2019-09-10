@@ -104,6 +104,7 @@ const useStyles = makeStyles(theme => ({
   container: {
     paddingTop: theme.spacing(4),
     paddingBottom: theme.spacing(4),
+    height: `calc(100vh - 64px)`,
   },
   paper: {
     padding: theme.spacing(2),
@@ -113,6 +114,12 @@ const useStyles = makeStyles(theme => ({
   },
   fixedHeight: {
     height: 240,
+  },
+  copyright: {
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    padding: '10px 10px',
   },
 }))
 
@@ -184,7 +191,14 @@ const Dashboard = props => {
           <Route path="/Dashboard/Reports" component={Reports} />
           <Route path="/Dashboard/Users" component={Users} />
         </Container>
-        <Copyright />
+        <div className={classes.copyright}>
+          <Copyright />
+        </div>
+        {/* 
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    padding: 10px 10px; */}
       </main>
     </div>
   )
