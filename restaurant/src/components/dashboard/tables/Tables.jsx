@@ -1,10 +1,10 @@
 import React from 'react'
 import Grid from '@material-ui/core/Grid'
-import { makeStyles } from '@material-ui/core/styles'
+import {makeStyles} from '@material-ui/core/styles'
 import Paper from '@material-ui/core/Paper'
 import Fab from '@material-ui/core/Fab'
 import AddIcon from '@material-ui/icons/Add'
-
+import logoPattern from '../../../assets/wood-pattern.png'
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
@@ -16,8 +16,10 @@ const useStyles = makeStyles(theme => ({
     textAlign: 'center',
     color: theme.palette.text.secondary,
     borderRadius: '50%',
-    boxShadow: '0px 15px 20px 5px #00000082',
+    boxShadow: '0px 20px 20px 5px #00000082',
     position: 'relative',
+    backgroundColor: '#6e4e26',
+    backgroundImage: `url(${logoPattern})`,
   },
   gridContainer: {
     height: '100%',
@@ -45,7 +47,6 @@ const useStyles = makeStyles(theme => ({
 }))
 export default function Tables() {
   const classes = useStyles()
-
   return (
     <div className={classes.root}>
       <Grid container spacing={3} className={classes.gridContainer}>

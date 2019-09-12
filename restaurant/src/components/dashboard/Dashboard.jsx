@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react'
+import React, {useEffect} from 'react'
 import clsx from 'clsx'
-import { makeStyles } from '@material-ui/core/styles'
+import {makeStyles} from '@material-ui/core/styles'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import Drawer from '@material-ui/core/Drawer'
 import AppBar from '@material-ui/core/AppBar'
@@ -12,7 +12,7 @@ import Container from '@material-ui/core/Container'
 import Link from '@material-ui/core/Link'
 import MenuIcon from '@material-ui/icons/Menu'
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
-import { Route } from 'react-router-dom'
+import {Route} from 'react-router-dom'
 import NavigationList from '../navigation-list/NavigationList'
 import Tables from './tables/Tables'
 import Orders from './orders/Orders'
@@ -20,7 +20,7 @@ import Kitchen from './kitchen/Kitchen'
 import Billing from './billing/Billing'
 import Reports from './reports/Reports'
 import Users from './users/Users'
-import { connect } from 'react-redux'
+import {connect} from 'react-redux'
 
 function Copyright() {
   return (
@@ -148,10 +148,7 @@ const Dashboard = props => {
             color="inherit"
             aria-label="open drawer"
             onClick={handleDrawerOpen}
-            className={clsx(
-              classes.menuButton,
-              open && classes.menuButtonHidden
-            )}
+            className={clsx(classes.menuButton, open && classes.menuButtonHidden)}
           >
             <MenuIcon />
           </IconButton>
