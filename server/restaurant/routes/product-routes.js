@@ -1,16 +1,16 @@
 var express = require("express");
 var router = express.Router();
-const orderController = require("../controllers/order-controller");
+const productController = require("../controllers/product-controller");
 
 const wrapAsync = fn => {
   return function(req, res, next) {
     fn(req, res, next).catch(next);
   };
 };
-router.post("/", wrapAsync(orderController.create));
-// router.get("/:id", wrapAsync(userController.getOne));
-// router.get("/", wrapAsync(userController.getAll));
-// router.delete("/", wrapAsync(userController.delete));
-// router.put("/", wrapAsync(userController.update));
+router.post("/", wrapAsync(productController.create));
+router.get("/:id", wrapAsync(productController.getOne));
+router.get("/", wrapAsync(productController.getAll));
+router.delete("/", wrapAsync(productController.delete));
+router.put("/", wrapAsync(productController.update));
 
 module.exports = router;
