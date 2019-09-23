@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
   );
   order.associate = function(models) {
     // associations can be defined here
-    order.hasOne(models.user, {
+    order.belongsTo(models.user, {
       foreignKey: "user_id"
     });
     order.belongsToMany(models.product, { through: "order_product" });
