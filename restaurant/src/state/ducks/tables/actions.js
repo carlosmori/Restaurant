@@ -1,4 +1,4 @@
-import {TABLES_TEST_ACTION, TABLES_TEST_PLAIN_ACTION} from './types'
+import {TABLES_TEST_ACTION, TABLES_TEST_PLAIN_ACTION, FETCH_TABLE} from './types'
 
 //With payload
 export const tablesTestAction = payload => ({
@@ -8,4 +8,7 @@ export const tablesTestAction = payload => ({
 //Without payload
 export const tablesTestPlainAction = () => ({
   type: TABLES_TEST_PLAIN_ACTION,
+})
+export const fetchTables = () => ({
+  type: FETCH_TABLE.REQUEST,
 })

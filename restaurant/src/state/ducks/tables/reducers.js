@@ -1,13 +1,14 @@
-import {TABLES_TEST_PLAIN_ACTION} from './types'
+import {FETCH_TABLE} from './types'
 const initialState = {
-  BillingState: {},
+  tablesList: [],
 }
 
 export default (state = initialState, {type, payload}) => {
   switch (type) {
-    case TABLES_TEST_PLAIN_ACTION:
+    case FETCH_TABLE.SUCCESS:
       return {
         ...state,
+        tablesList: payload.tables,
       }
     default:
       return state

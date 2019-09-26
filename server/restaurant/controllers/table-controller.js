@@ -69,7 +69,6 @@ module.exports = {
       });
       const tableUpdated = await table.update(
         {
-          id,
           status: currentTable.status === status ? currentTable.status : status,
           order_id:
             currentTable.order_id == order_id ? currentTable.order_id : order_id

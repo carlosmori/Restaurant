@@ -1,10 +1,12 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import Grid from '@material-ui/core/Grid'
 import {makeStyles} from '@material-ui/core/styles'
 import Paper from '@material-ui/core/Paper'
 import Fab from '@material-ui/core/Fab'
 import AddIcon from '@material-ui/icons/Add'
 import logoPattern from '../../../assets/wood-pattern.png'
+import {connect} from 'react-redux'
+import {fetchTables} from '../../../state/ducks/tables/actions'
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
@@ -45,7 +47,30 @@ const useStyles = makeStyles(theme => ({
     marginTop: '-8%',
   },
 }))
-export default function Tables() {
+export const Tables = props => {
+  useEffect(() => {
+    props.fetchTables()
+    return () => {}
+  }, [])
+  useEffect(() => {
+    if (props.tables) {
+      console.log(props.tables)
+      // setState({
+      //   columns: [...state.columns],
+      //   data: props.users.map(user => {
+      //     const {name, age, role_enum, email, cellphone} = user
+      //     return {
+      //       name,
+      //       age,
+      //       role: role_enum.description,
+      //       email,
+      //       cellphone,
+      //     }
+      //   }),
+      // })
+    }
+    return () => {}
+  }, [props.tables])
   const classes = useStyles()
   return (
     <div className={classes.root}>
@@ -106,3 +131,12 @@ export default function Tables() {
     </div>
   )
 }
+const mapStateToProps = state => ({
+  tables: state.tables.tablesList,
+})
+export default connect(
+  mapStateToProps,
+  {
+    fetchTables,
+  }
+)(Tables)

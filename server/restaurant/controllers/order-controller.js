@@ -74,12 +74,21 @@ module.exports = {
   async update(req, res) {
     try {
       const { id, user_id, status, amount, deliver_time } = req.body;
+      const current_order = await order.findOne({
+        where: { id }
+      });
       const orderUpdated = await order.update(
         {
-          user_id,
-          status,
-          amount,
-          deliver_time
+          user_id:
+            current_order.user_id === user_id ? current_order.user_id : user_id,
+          status:
+            current_order.status === status ? current_order.status : status,
+          amount:
+            current_order.amount === amount ? current_order.amount : amount,
+          deliver_time:
+            current_order.deliver_time === deliver_time
+              ? current_order.deliver_time
+              : deliver_time
         },
         { where: { id } }
       );
