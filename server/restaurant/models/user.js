@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
       name: DataTypes.STRING,
       last_name: DataTypes.STRING,
       date_of_birth: DataTypes.DATEONLY,
-      role: DataTypes.STRING,
+      role_id: DataTypes.INTEGER,
       email: DataTypes.STRING,
       cellphone: DataTypes.INTEGER
     },
@@ -15,7 +15,9 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
   user.associate = function(models) {
-    // associations can be defined here
+    user.belongsTo(models.role_enum, {
+      foreignKey: "role_id"
+    });
   };
   return user;
 };

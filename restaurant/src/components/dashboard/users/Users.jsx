@@ -71,11 +71,11 @@ export const Users = props => {
       setState({
         columns: [...state.columns],
         data: props.users.map(user => {
-          const {name, age, role, email, cellphone} = user
+          const {name, age, role_enum, email, cellphone} = user
           return {
             name,
             age,
-            role,
+            role: role_enum.description,
             email,
             cellphone,
           }

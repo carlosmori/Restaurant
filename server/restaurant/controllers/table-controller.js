@@ -1,4 +1,5 @@
 const table = require("../models").table;
+const order = require("../models").order;
 module.exports = {
   // Create One
   async create(req, res) {
@@ -16,7 +17,17 @@ module.exports = {
   //Get all
   async getAll(req, res) {
     try {
-      const tables = await table.findAll({});
+      const tables = await table.findAll({
+        include: [
+          {
+            model: order,
+            as: "currentOrder"
+            // attributes: {
+            //   exclude: ["id", "createdAt", "updatedAt"]
+            // }
+          }
+        ]
+      });
       return res.status(200).json(tables);
     } catch (error) {
       return res.status(500).json({ error: error.toString() });

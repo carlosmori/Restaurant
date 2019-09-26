@@ -1,4 +1,5 @@
 const order = require("../models").order;
+const user = require("../models").user;
 module.exports = {
   // Create One
   async create(req, res) {
@@ -18,7 +19,25 @@ module.exports = {
   //Get all
   async getAll(req, res) {
     try {
-      const orders = await order.findAll({});
+      const orders = await order.findAll({
+        include: [
+          {
+            model: user,
+            as: "waiterWaitress",
+            attributes: {
+              exclude: [
+                "id",
+                "date_of_birth",
+                "role_id",
+                "email",
+                "cellphone",
+                "createdAt",
+                "updatedAt"
+              ]
+            }
+          }
+        ]
+      });
       return res.status(200).json(orders);
     } catch (error) {
       return res.status(500).json({ error: error.toString() });

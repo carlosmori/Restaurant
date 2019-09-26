@@ -1,5 +1,6 @@
 const getAge = require("../utils/transformer-functions/calculateAge");
 const user = require("../models").user;
+const roleEnum = require("../models").role_enum;
 module.exports = {
   // Create One
   async create(req, res) {
@@ -28,7 +29,16 @@ module.exports = {
   //Get all
   async getAll(req, res) {
     try {
-      let users = await user.findAll({});
+      let users = await user.findAll({
+        include: [
+          {
+            model: roleEnum,
+            attributes: {
+              exclude: ["id", "createdAt", "updatedAt"]
+            }
+          }
+        ]
+      });
       users = users.map(user => user.toJSON());
       users = users.map(user => {
         return { ...user, age: getAge(user.date_of_birth) };

@@ -28,6 +28,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable("product");
+    return queryInterface.bulkDelete("product", null, { truncate: true });
   }
 };

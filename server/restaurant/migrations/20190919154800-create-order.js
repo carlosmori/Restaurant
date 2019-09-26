@@ -31,6 +31,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable("order");
+    return queryInterface.bulkDelete("order", null, { truncate: true });
   }
 };

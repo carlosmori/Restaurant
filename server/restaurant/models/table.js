@@ -6,13 +6,15 @@ module.exports = (sequelize, DataTypes) => {
       status: DataTypes.STRING,
       order_id: DataTypes.INTEGER
     },
-    {}
+    {
+      freezeTableName: true // Model tableName will be the same as the model name
+    }
   );
   table.associate = function(models) {
     // associations can be defined here
     table.belongsTo(models.order, {
       foreignKey: "order_id",
-      as: "orders"
+      as: "currentOrder"
     });
   };
   return table;

@@ -17,7 +17,7 @@ module.exports = {
       date_of_birth: {
         type: Sequelize.STRING
       },
-      role: {
+      role_id: {
         type: Sequelize.STRING
       },
       email: {
@@ -37,6 +37,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable("user");
+    return queryInterface.bulkDelete("user", null, { truncate: true });
   }
 };
