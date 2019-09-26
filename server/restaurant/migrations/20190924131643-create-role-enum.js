@@ -22,6 +22,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.bulkDelete("role_enum", null, { truncate: true });
+    return queryInterface.dropTable("role_enum");
   }
 };

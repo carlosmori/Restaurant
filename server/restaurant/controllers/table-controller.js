@@ -64,8 +64,16 @@ module.exports = {
   async update(req, res) {
     try {
       const { id, status, order_id } = req.body;
+      const currentTable = await table.findOne({
+        where: { id }
+      });
       const tableUpdated = await table.update(
-        { id, status, order_id },
+        {
+          id,
+          status: currentTable.status === status ? currentTable.status : status,
+          order_id:
+            currentTable.order_id == order_id ? currentTable.order_id : order_id
+        },
         { where: { id } }
       );
       const response = tableUpdated[0]

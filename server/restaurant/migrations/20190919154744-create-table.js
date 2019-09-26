@@ -9,7 +9,7 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       status: {
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER
       },
       order_id: {
         type: Sequelize.INTEGER
@@ -25,6 +25,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.bulkDelete("table", null, { truncate: true });
+    return queryInterface.dropTable("table");
   }
 };

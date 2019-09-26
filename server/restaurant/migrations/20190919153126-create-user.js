@@ -37,6 +37,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.bulkDelete("user", null, { truncate: true });
+    return queryInterface.dropTable("user");
   }
 };
