@@ -1,3 +1,4 @@
+const getAge = require("../utils/transformer-functions/calculateAge");
 const user = require("../models").user;
 module.exports = {
   // Create One
@@ -27,7 +28,11 @@ module.exports = {
   //Get all
   async getAll(req, res) {
     try {
-      const users = await user.findAll({});
+      let users = await user.findAll({});
+      users = users.map(user => user.toJSON());
+      users = users.map(user => {
+        return { ...user, age: getAge(user.date_of_birth) };
+      });
       return res.status(200).json(users);
     } catch (error) {
       return res.status(500).json({ error: error.toString() });

@@ -21,13 +21,7 @@ import Billing from './billing/Billing'
 import Reports from './reports/Reports'
 import Users from './users/Users'
 import {connect} from 'react-redux'
-import {billingTestAction} from '../../state/ducks/billing/actions'
-import {dashboardTestAction} from '../../state/ducks/dashboard/actions'
-import {kitchenTestAction} from '../../state/ducks/kitchen/actions'
-import {ordersTestAction} from '../../state/ducks/orders/actions'
-import {reportsTestAction} from '../../state/ducks/reports/actions'
 import {tablesTestAction} from '../../state/ducks/tables/actions'
-import {usersTestAction} from '../../state/ducks/users/actions'
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -139,15 +133,9 @@ const Dashboard = props => {
     setOpen(false)
   }
   useEffect(() => {
-    props.billingTestAction()
-    props.dashboardTestAction()
-    props.kitchenTestAction()
-    props.ordersTestAction()
-    props.reportsTestAction()
-    props.tablesTestAction()
-    props.usersTestAction()
+    // props.tablesTestAction()
     return () => {}
-  }, [props])
+  }, [props.tablesTestAction])
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -220,12 +208,6 @@ const mapStateToProps = state => ({
 export default connect(
   mapStateToProps,
   {
-    billingTestAction,
-    dashboardTestAction,
-    kitchenTestAction,
-    ordersTestAction,
-    reportsTestAction,
     tablesTestAction,
-    usersTestAction,
   }
 )(Dashboard)

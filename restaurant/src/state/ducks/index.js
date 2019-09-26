@@ -11,13 +11,13 @@ export {default as navigationList} from './navigation-list'
 
 const createRootReducer = () =>
   combineReducers({
-    Billing: billingReducer,
-    Dashboard: dashboardReducer,
-    Kitchen: kitchenReducer,
-    // NavigationList: navigationListReducer,
-    Orders: navigationListReducer,
-    Reports: ordersReducer,
-    Tables: reportsReducer,
-    Users: tablesReducer,
+    billing: billingReducer,
+    dashboard: dashboardReducer,
+    kitchen: kitchenReducer,
+    navigationList: navigationListReducer,
+    orders: ordersReducer,
+    reports: reportsReducer,
+    tables: tablesReducer,
+    users: usersReducer,
   })
 export default createRootReducer

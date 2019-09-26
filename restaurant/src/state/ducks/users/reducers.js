@@ -1,13 +1,16 @@
-import {USERS_TEST_PLAIN_ACTION} from './types'
+import {FETCH_USER} from './types'
 const initialState = {
-  BillingState: {},
+  UsersState: {
+    userList: [],
+  },
 }
 
 export default (state = initialState, {type, payload}) => {
   switch (type) {
-    case USERS_TEST_PLAIN_ACTION:
+    case FETCH_USER.SUCCESS:
       return {
         ...state,
+        userList: payload.users,
       }
     default:
       return state
