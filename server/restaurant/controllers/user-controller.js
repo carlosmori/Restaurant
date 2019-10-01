@@ -9,7 +9,7 @@ module.exports = {
         name,
         last_name,
         date_of_birth,
-        role,
+        role_id,
         email,
         cellphone
       } = req.body;
@@ -17,7 +17,7 @@ module.exports = {
         name,
         last_name,
         date_of_birth,
-        role,
+        role_id,
         email,
         cellphone
       });
@@ -39,10 +39,11 @@ module.exports = {
           }
         ]
       });
-      users = users.map(user => user.toJSON());
-      users = users.map(user => {
-        return { ...user, age: getAge(user.date_of_birth) };
-      });
+      //Take DOB and create Age from it
+      // users = users.map(user => user.toJSON());
+      // users = users.map(user => {
+      //   return { ...user, age: getAge(user.date_of_birth) };
+      // });
       return res.status(200).json(users);
     } catch (error) {
       return res.status(500).json({ error: error.toString() });
@@ -83,18 +84,30 @@ module.exports = {
         name,
         last_name,
         date_of_birth,
-        role,
+        role_id,
         email,
         cellphone
       } = req.body;
+      const currentUser = await user.findOne({
+        where: { id }
+      });
       const userUpdated = await user.update(
         {
-          name,
-          last_name,
-          date_of_birth,
-          role,
-          email,
-          cellphone
+          name: currentUser.name === name ? currentUser.name : name,
+          last_name:
+            currentUser.last_name === last_name
+              ? currentUser.last_name
+              : last_name,
+          date_of_birth:
+            currentUser.date_of_birth === date_of_birth
+              ? currentUser.date_of_birth
+              : date_of_birth,
+          role_id: currentUser.role_id === role_id ? currentUser.role_id : role_id,
+          email: currentUser.email === email ? currentUser.email : email,
+          cellphone:
+            currentUser.cellphone === cellphone
+              ? currentUser.cellphone
+              : cellphone
         },
         { where: { id } }
       );

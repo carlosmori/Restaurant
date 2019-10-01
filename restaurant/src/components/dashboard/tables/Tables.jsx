@@ -9,7 +9,6 @@ import {connect} from 'react-redux'
 import {fetchTables} from '../../../state/ducks/tables/actions'
 import Menu from '@material-ui/core/Menu'
 import MenuItem from '@material-ui/core/MenuItem'
-import IconButton from '@material-ui/core/IconButton'
 
 const useStyles = makeStyles(theme => ({
   root: {
