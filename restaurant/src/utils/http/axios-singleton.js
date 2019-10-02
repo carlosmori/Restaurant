@@ -1,5 +1,5 @@
 import axiosInstance from 'axios'
-const AUTHORIZATION_KEY_NAME = 'Token'
+// const AUTHORIZATION_KEY_NAME = 'Token'
 
 const axios = axiosInstance.create({
   baseURL: 'http://localhost:3000',

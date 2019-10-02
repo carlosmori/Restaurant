@@ -38,7 +38,7 @@ export function* fetchUsers() {
 }
 export function* updateUser(action) {
   try {
-    const response = yield call(updateUserHttpCall, action.payload)
+    yield call(updateUserHttpCall, action.payload)
     //users
     // const users = response.data
 
@@ -51,7 +51,7 @@ export function* updateUser(action) {
 }
 export function* deleteUser(action) {
   try {
-    const response = yield call(deleteUserHttpCall, action.payload)
+    yield call(deleteUserHttpCall, action.payload)
     //users
     // const users = response.data
 
@@ -64,7 +64,7 @@ export function* deleteUser(action) {
 }
 export function* addUser(action) {
   try {
-    const response = yield call(addUserHttpCall, action.payload)
+    yield call(addUserHttpCall, action.payload)
     //users
     // const users = response.data
 

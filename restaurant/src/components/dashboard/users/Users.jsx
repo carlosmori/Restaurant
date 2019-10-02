@@ -49,8 +49,6 @@ const useStyles = makeStyles(theme => ({
     width: 200,
   },
   datePicker: {
-    marginTop: '16px',
-    marginBottom: '8px',
     width: '48%',
     margin: '2% 1%',
   },
@@ -60,7 +58,7 @@ const useStyles = makeStyles(theme => ({
   },
   buttonContainer: {
     display: 'flex',
-    marginTop: '10%',
+    marginTop: '2%',
   },
   title: {
     fontSize: '1.25rem',
@@ -107,7 +105,7 @@ export const Users = props => {
   useEffect(() => {
     props.fetchUsers()
     return () => {}
-  }, [])
+  }, [props])
   useEffect(() => {
     if (props.users) {
       setState({

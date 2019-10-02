@@ -145,9 +145,9 @@ export default function Billing() {
               on 15 March, 2019
             </Typography>
             <div>
-              <a color="primary" href="javascript:;">
+              {/* <a color="primary" href="javascript:;">
                 View balance
-              </a>
+              </a> */}
             </div>
           </React.Fragment>
         </Paper>
