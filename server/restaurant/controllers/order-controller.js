@@ -1,17 +1,46 @@
 const order = require("../models").order;
 const user = require("../models").user;
+const table = require("../models").table;
+const orderProduct = require("../models").order_product;
+const moment = require("moment");
 module.exports = {
   // Create One
   async create(req, res) {
     try {
-      const { user_id, status, amount, deliver_time } = req.body;
+      const { amount, cook_time, table_id, products } = req.body;
+      //@todo fix hardcoded userId with user id from localstorage
+      const user_id = 1;
+      //Crear Orden y con el id, actualizar la mesa
+      const deliver_time = moment()
+        .add(cook_time, "minutes")
+        .format("YYYY-MM-DD HH:mm:ss");
       const new_order = await order.create({
         user_id,
-        status,
+        status: 2,
         amount,
         deliver_time
       });
-      return res.status(201).json(new_order);
+      //@todo refactor hardcoded status for a proper enum
+      const tableUpdated = await table.update(
+        {
+          status: 2,
+          order_id: new_order.id
+        },
+        { where: { id: table_id } }
+      );
+      for (const id of products) {
+        await orderProduct.create({
+          order_id: new_order.id,
+          product_id: id
+        });
+      }
+      let response = new_order.toJSON();
+      response = {...response , tableId : table_id , tableStatus: 2}
+      //Take DOB and create Age from it
+      // users = users.map(user => user.toJSON());
+      // users = users.map(user => {
+      //   return { ...user, age: getAge(user.date_of_birth) };
+      return res.status(201).send(response);
     } catch (error) {
       return res.status(500).json({ error: error.toString() });
     }

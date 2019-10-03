@@ -7,6 +7,7 @@ import ordersReducer from './orders/reducers'
 import reportsReducer from './reports/reducers'
 import tablesReducer from './tables/reducers'
 import usersReducer from './users/reducers'
+import orderMenuReducer from './order-menu/reducers'
 export {default as navigationList} from './navigation-list'
 
 const createRootReducer = () =>
@@ -19,5 +20,6 @@ const createRootReducer = () =>
     reports: reportsReducer,
     tables: tablesReducer,
     users: usersReducer,
+    orderMenu: orderMenuReducer,
   })
 export default createRootReducer

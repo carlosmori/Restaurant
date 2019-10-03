@@ -5,11 +5,12 @@ import Paper from '@material-ui/core/Paper'
 import Fab from '@material-ui/core/Fab'
 import AddIcon from '@material-ui/icons/Add'
 import logoPattern from '../../../../assets/wood-pattern.png'
-// import {connect} from 'react-redux'
-// import {fetchTables} from '../../../state/ducks/tables/actions'
+import {connect} from 'react-redux'
+import {toggleModal} from '../../../../state/ducks/order-menu/actions'
 import Menu from '@material-ui/core/Menu'
 import MenuItem from '@material-ui/core/MenuItem'
 import {TABLE_STATUS} from '../../../../utils/enums/tableStatusEnum'
+
 const useStyles = makeStyles(theme => ({
   paper: {
     display: 'flex',
@@ -56,12 +57,13 @@ const useStyles = makeStyles(theme => ({
     textShadow: '-2px 10px 10px rgba(0, 0, 0, 0.87)',
   },
 }))
-const Table = props => {
+export const Table = props => {
   const [anchorEl, setAnchorEl] = React.useState(null)
   const [status, setStatus] = React.useState('Available')
   const takeOrder = () => {
-    setStatus(TABLE_STATUS[1])
+    // setStatus(TABLE_STATUS[1])
     setAnchorEl(null)
+    props.toggleModal({isOrderMenuModalToggled: true, tableId: props.table.id})
   }
   const serveOrder = () => {
     setStatus('Clients Eating')
@@ -72,30 +74,38 @@ const Table = props => {
   }
   const classes = useStyles()
   return (
-    <Grid item xs={12} sm={6} className={classes.gridBlock} key={props.index}>
-      <div className={classes.subtitleContainer}>
-        <p className={classes.subtitle}>#{props.value.id}</p>
-      </div>
-      <Paper className={classes.paper}>
-        <div className={classes.status}>{status}</div>
-      </Paper>
-      <div className={classes.fabContainer}>
-        <Fab color="primary" aria-label="add" onClick={handleTableActionsClick}>
-          <AddIcon aria-controls="simple-menu" aria-haspopup="true" />
-        </Fab>
-        <Menu id="simple-menu" anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)}>
-          {status === 'Available' ? (
-            <MenuItem onClick={takeOrder}>Take Order</MenuItem>
-          ) : null}
-          {status === 'Clients Waiting' ? (
-            <MenuItem onClick={serveOrder}>Serve Order</MenuItem>
-          ) : null}
-          {status === 'Clients Eating' ? (
-            <MenuItem onClick={serveOrder}>Close Table</MenuItem>
-          ) : null}
-        </Menu>
-      </div>
-    </Grid>
+    <React.Fragment>
+      <Grid item xs={12} sm={6} className={classes.gridBlock} key={props.index}>
+        <div className={classes.subtitleContainer}>
+          <p className={classes.subtitle}>#{props.table.id}</p>
+        </div>
+        <Paper className={classes.paper}>
+          <div className={classes.status}>{TABLE_STATUS[props.table.status]}</div>
+        </Paper>
+        <div className={classes.fabContainer}>
+          <Fab color="primary" aria-label="add" onClick={handleTableActionsClick}>
+            <AddIcon aria-controls="simple-menu" aria-haspopup="true" />
+          </Fab>
+          <Menu id="simple-menu" anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)}>
+            {status === 'Available' ? (
+              <MenuItem onClick={takeOrder}>Take Order</MenuItem>
+            ) : null}
+            {status === 'Clients Waiting' ? (
+              <MenuItem onClick={serveOrder}>Serve Order</MenuItem>
+            ) : null}
+            {status === 'Clients Eating' ? (
+              <MenuItem onClick={serveOrder}>Close Table</MenuItem>
+            ) : null}
+          </Menu>
+        </div>
+      </Grid>
+    </React.Fragment>
   )
 }
-export default Table
+const mapStateToProps = state => ({})
+export default connect(
+  mapStateToProps,
+  {
+    toggleModal,
+  }
+)(Table)

@@ -11,7 +11,7 @@ module.exports = {
           updatedAt: new Date()
         },
         {
-          description: "Prepairing",
+          description: "Preparing",
           createdAt: new Date(),
           updatedAt: new Date()
         },

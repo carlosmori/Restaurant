@@ -6,7 +6,9 @@ module.exports = (sequelize, DataTypes) => {
       order_id: DataTypes.INTEGER,
       product_id: DataTypes.INTEGER
     },
-    {}
+    {
+      freezeTableName: true // Model tableName will be the same as the model name
+    }
   );
   order_product.associate = function(models) {
     // associations can be defined here

@@ -10,8 +10,10 @@ var orderRouter = require("./routes/order-routes");
 var userRouter = require("./routes/user-routes");
 var tableRouter = require("./routes/table-routes");
 var productRouter = require("./routes/product-routes");
+var dotenv = require('dotenv');
 
 var app = express();
+dotenv.config();
 app.use(cors());
 
 // view engine setup

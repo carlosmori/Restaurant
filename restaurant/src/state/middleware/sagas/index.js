@@ -7,6 +7,7 @@ import ordersSaga from '../../ducks/orders/saga'
 import reportsSaga from '../../ducks/reports/saga'
 import tablesSaga from '../../ducks/tables/saga'
 import usersSaga from '../../ducks/users/saga'
+import orderMenuSaga from '../../ducks/order-menu/saga'
 
 export function* rootSaga() {
   yield all([
@@ -18,5 +19,6 @@ export function* rootSaga() {
     fork(reportsSaga),
     fork(tablesSaga),
     fork(usersSaga),
+    fork(orderMenuSaga),
   ])
 }
