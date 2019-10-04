@@ -33,15 +33,15 @@ const useStyles = makeStyles(theme => ({
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
   },
-  button: {
-    width: '49%',
-  },
-  buttonContainer: {
+  buttonsContainer: {
     display: 'flex',
     marginTop: '2%',
     justifyContent: 'space-between',
   },
-  title: {},
+  button: {
+    width: '49%',
+    textAlign: 'center',
+  },
   formControl: {
     margin: theme.spacing(1),
     minWidth: 120,
@@ -113,8 +113,8 @@ const OrderMenu = props => {
       table_id: props.tableId,
       products: selectedProducts.map(product => product.id),
     }
-    props.dispatchOrder(order)
     handleClose()
+    props.dispatchOrder(order)
   }
   const handleClose = () => {
     props.toggleModal({isOrderMenuModalToggled: false, tableId: undefined})
@@ -189,21 +189,21 @@ const OrderMenu = props => {
                 </span>
               </p>
             </div>
-            <div className={classes.buttonContainer}>
+            <div className={classes.buttonsContainer}>
               <Button
+                className={classes.button}
                 variant="contained"
                 color="secondary"
                 onClick={handleClose}
-                className={classes.button}
               >
                 Close
               </Button>
               <Button
                 variant="contained"
                 color="primary"
-                className={classes.button}
                 disabled={orderTotalAmount === 0 || orderEstimatedCookTime === 0}
                 onClick={dispatchOrder}
+                className={classes.button}
               >
                 Confirm
               </Button>

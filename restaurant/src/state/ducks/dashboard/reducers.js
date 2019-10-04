@@ -1,13 +1,26 @@
-import {DASHBOARD_TEST_PLAIN_ACTION} from './types'
+import {DASHBOARD_LOADING, DASHBOARD_SNACKBAR} from './types'
 const initialState = {
-  BillingState: {},
+  informativeDialog: {show: false, message: '', variant: ''},
+  displayLoadingDialog: false,
 }
 
 export default (state = initialState, {type, payload}) => {
   switch (type) {
-    case DASHBOARD_TEST_PLAIN_ACTION:
+    case DASHBOARD_SNACKBAR:
+      const {show, message, variant} = payload
       return {
         ...state,
+        informativeDialog: {
+          ...state.informativeDialog,
+          show,
+          message,
+          variant,
+        },
+      }
+    case DASHBOARD_LOADING:
+      return {
+        ...state,
+        displayLoadingDialog: payload.loading,
       }
     default:
       return state

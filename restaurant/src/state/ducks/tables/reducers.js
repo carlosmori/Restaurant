@@ -1,5 +1,4 @@
-import {FETCH_TABLE, FETCH_ORDER_MENU} from './types'
-import {DISPATCH_ORDER} from '../order-menu/types'
+import {FETCH_TABLE, FETCH_ORDER_MENU, UPDATE_TABLE} from './types'
 const initialState = {
   tablesList: [],
   productsList: [],
@@ -17,7 +16,7 @@ export default (state = initialState, {type, payload}) => {
         ...state,
         productsList: payload.products,
       }
-    case DISPATCH_ORDER.SUCCESS:
+    case UPDATE_TABLE:
       let {tablesList} = state
       const tableIndex = tablesList.findIndex(table => table.id === payload.tableId)
       tablesList[tableIndex] = {...state.tablesList[tableIndex], status: payload.status}

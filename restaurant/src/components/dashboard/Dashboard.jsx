@@ -22,6 +22,9 @@ import Reports from './reports/Reports'
 import Users from './users/Users'
 import {connect} from 'react-redux'
 import {tablesTestAction} from '../../state/ducks/tables/actions'
+import InformativeDialog from '../dialogs/informative-dialog'
+import LoadingDialog from '../dialogs/loading-dialog copy'
+
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -126,6 +129,7 @@ const useStyles = makeStyles(theme => ({
 const Dashboard = props => {
   const classes = useStyles()
   const [open, setOpen] = React.useState(true)
+
   const handleDrawerOpen = () => {
     setOpen(true)
   }
@@ -133,9 +137,8 @@ const Dashboard = props => {
     setOpen(false)
   }
   useEffect(() => {
-    // props.tablesTestAction()
     return () => {}
-  }, [props.tablesTestAction])
+  }, [props.displayLoadingDialog])
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -192,11 +195,14 @@ const Dashboard = props => {
         <div className={classes.copyright}>
           <Copyright />
         </div>
-        {/* 
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    padding: 10px 10px; */}
+
+        {props.displayLoadingDialog ? <LoadingDialog /> : null}
+        {props.informativeDialog.show ? (
+          <InformativeDialog
+            message={props.informativeDialog.message}
+            variant={props.informativeDialog.variant}
+          />
+        ) : null}
       </main>
     </div>
   )
@@ -204,6 +210,8 @@ const Dashboard = props => {
 
 const mapStateToProps = state => ({
   dashboardTitle: state.navigationList.currentTab,
+  informativeDialog: state.dashboard.informativeDialog,
+  displayLoadingDialog: state.dashboard.displayLoadingDialog,
 })
 export default connect(
   mapStateToProps,

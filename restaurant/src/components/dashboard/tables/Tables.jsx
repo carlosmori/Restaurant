@@ -2,7 +2,12 @@ import React, {useEffect} from 'react'
 import Grid from '@material-ui/core/Grid'
 import {makeStyles} from '@material-ui/core/styles'
 import {connect} from 'react-redux'
-import {fetchTables,fetchOrderMenu} from '../../../state/ducks/tables/actions'
+import {
+  fetchTables,
+  fetchOrderMenu,
+  updateTable,
+} from '../../../state/ducks/tables/actions'
+import {showInformativeDialog} from '../../../state/ducks/dashboard/actions'
 import Table from './table/Table'
 import OrderMenu from './menu/OrderMenu'
 const useStyles = makeStyles(theme => ({
@@ -15,11 +20,12 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 export const Tables = props => {
-  
-  // React.useEffect(() => {
-  //   console.log('init')
-  //   console.log(props)
-  // }, [])
+  React.useEffect(() => {
+    if (props.newOrder) {
+      props.updateTable(props.newOrder)
+      //props.showInformativeDialog(true)
+    }
+  }, [props.newOrder])
   useEffect(() => {
     props.fetchTables()
     return () => {}
@@ -47,11 +53,14 @@ export const Tables = props => {
 const mapStateToProps = state => ({
   tables: state.tables.tablesList,
   isOrderMenuModalToggled: state.orderMenu.isOrderMenuModalToggled,
+  newOrder: state.orderMenu.currentOrderHttp.success,
 })
 export default connect(
   mapStateToProps,
   {
     fetchTables,
-    fetchOrderMenu
+    fetchOrderMenu,
+    updateTable,
+    showInformativeDialog,
   }
 )(Tables)
