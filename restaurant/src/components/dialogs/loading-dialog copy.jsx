@@ -52,10 +52,6 @@ const LoadingDialog = props => {
       disableEnforceFocus={true}
     >
       <CircularProgress variant="determinate" value={progress} />
-      {/* <Fade in={open}>
-        <div className={classes.paper}>
-        </div>
-      </Fade> */}
     </Modal>
   )
 }

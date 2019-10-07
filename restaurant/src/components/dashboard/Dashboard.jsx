@@ -29,8 +29,8 @@ function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
-      <Link color="inherit" href="https://material-ui.com/">
-        Your Website
+      <Link color="inherit" href="https://www.linkedin.com/in/carlos-agustin-mori-765116128/" target="_blank">
+        Carlos Agustin Mori
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}

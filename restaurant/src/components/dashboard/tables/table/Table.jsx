@@ -10,6 +10,7 @@ import {toggleModal} from '../../../../state/ducks/order-menu/actions'
 import Menu from '@material-ui/core/Menu'
 import MenuItem from '@material-ui/core/MenuItem'
 import {TABLE_STATUS} from '../../../../utils/enums/tableStatusEnum'
+import Timer from '../../../timer/Timer'
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -60,8 +61,10 @@ const useStyles = makeStyles(theme => ({
 export const Table = props => {
   const [anchorEl, setAnchorEl] = React.useState(null)
   const [status, setStatus] = React.useState('Available')
+  const [remainingTime, setRemainingTime] = React.useState({minutes: 14, seconds: 59})
+  const classes = useStyles()
+
   const takeOrder = () => {
-    // setStatus(TABLE_STATUS[1])
     setAnchorEl(null)
     props.toggleModal({isOrderMenuModalToggled: true, tableId: props.table.id})
   }
@@ -72,7 +75,6 @@ export const Table = props => {
   const handleTableActionsClick = event => {
     setAnchorEl(event.currentTarget)
   }
-  const classes = useStyles()
   return (
     <React.Fragment>
       <Grid item xs={12} sm={6} className={classes.gridBlock} key={props.index}>
@@ -81,6 +83,8 @@ export const Table = props => {
         </div>
         <Paper className={classes.paper}>
           <div className={classes.status}>{TABLE_STATUS[props.table.status]}</div>
+          {/* @todo fix status enum value */}
+          {props.table.status === 2 ? (<Timer deliverBy={props.table.currentOrder.deliver_time} />) : null } 
         </Paper>
         <div className={classes.fabContainer}>
           <Fab color="primary" aria-label="add" onClick={handleTableActionsClick}>

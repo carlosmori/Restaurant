@@ -19,7 +19,11 @@ export default (state = initialState, {type, payload}) => {
     case UPDATE_TABLE:
       let {tablesList} = state
       const tableIndex = tablesList.findIndex(table => table.id === payload.tableId)
-      tablesList[tableIndex] = {...state.tablesList[tableIndex], status: payload.status}
+      tablesList[tableIndex] = {
+        ...state.tablesList[tableIndex],
+        status: payload.status,
+        currentOrder: payload,
+      }
       return {
         ...state,
         tablesList: [...tablesList],
