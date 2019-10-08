@@ -3,7 +3,7 @@ import Grid from '@material-ui/core/Grid'
 import {makeStyles} from '@material-ui/core/styles'
 import Paper from '@material-ui/core/Paper'
 import Fab from '@material-ui/core/Fab'
-import AddIcon from '@material-ui/icons/Add'
+import MoreHorizIcon from '@material-ui/icons/MoreHoriz'
 import logoPattern from '../../../../assets/wood-pattern.png'
 import {connect} from 'react-redux'
 import {toggleModal} from '../../../../state/ducks/order-menu/actions'
@@ -11,6 +11,7 @@ import Menu from '@material-ui/core/Menu'
 import MenuItem from '@material-ui/core/MenuItem'
 import {TABLE_STATUS} from '../../../../utils/enums/tableStatusEnum'
 import Timer from '../../../timer/Timer'
+import moment from 'moment'
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -61,7 +62,6 @@ const useStyles = makeStyles(theme => ({
 export const Table = props => {
   const [anchorEl, setAnchorEl] = React.useState(null)
   const [status, setStatus] = React.useState('Available')
-  const [remainingTime, setRemainingTime] = React.useState({minutes: 14, seconds: 59})
   const classes = useStyles()
 
   const takeOrder = () => {
@@ -75,6 +75,14 @@ export const Table = props => {
   const handleTableActionsClick = event => {
     setAnchorEl(event.currentTarget)
   }
+  const shouldDisplayTimer = () => {
+    //@todo refactor status == 2
+    //Display timer only if the deliverByDate is greater than the current date and the status is Clients Waiting
+    const then = moment(new Date(props.table.currentOrder.deliver_time)).valueOf()
+    const now = moment().valueOf()
+    const futureDeliverBy = (then - now > 0);
+    return props.table.status === 2 && futureDeliverBy
+  }
   return (
     <React.Fragment>
       <Grid item xs={12} sm={6} className={classes.gridBlock} key={props.index}>
@@ -83,19 +91,25 @@ export const Table = props => {
         </div>
         <Paper className={classes.paper}>
           <div className={classes.status}>{TABLE_STATUS[props.table.status]}</div>
-          {/* @todo fix status enum value */}
-          {props.table.status === 2 ? (<Timer deliverBy={props.table.currentOrder.deliver_time} />) : null } 
+          {shouldDisplayTimer() ? (
+            <Timer deliverBy={props.table.currentOrder.deliver_time} />
+          ) : null}
         </Paper>
         <div className={classes.fabContainer}>
           <Fab color="primary" aria-label="add" onClick={handleTableActionsClick}>
-            <AddIcon aria-controls="simple-menu" aria-haspopup="true" />
+            <MoreHorizIcon aria-controls="simple-menu" aria-haspopup="true" />
           </Fab>
           <Menu id="simple-menu" anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)}>
-            {status === 'Available' ? (
+            {props.table.status === 1 ? (
               <MenuItem onClick={takeOrder}>Take Order</MenuItem>
             ) : null}
-            {status === 'Clients Waiting' ? (
-              <MenuItem onClick={serveOrder}>Serve Order</MenuItem>
+            {props.table.status === 2 ? (
+              <div>
+                <MenuItem onClick={serveOrder}>Deliver Order</MenuItem>
+                <MenuItem onClick={serveOrder} disabled={true}>
+                  Cancel Order
+                </MenuItem>
+              </div>
             ) : null}
             {status === 'Clients Eating' ? (
               <MenuItem onClick={serveOrder}>Close Table</MenuItem>

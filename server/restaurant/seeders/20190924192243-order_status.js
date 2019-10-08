@@ -11,12 +11,12 @@ module.exports = {
           updatedAt: new Date()
         },
         {
-          description: "Preparing",
+          description: "Ready to dispatch",
           createdAt: new Date(),
           updatedAt: new Date()
         },
         {
-          description: "Ready to dispatch",
+          description: "Cancelled",
           createdAt: new Date(),
           updatedAt: new Date()
         },

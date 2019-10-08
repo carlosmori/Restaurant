@@ -7,9 +7,10 @@ const wrapAsync = fn => {
     fn(req, res, next).catch(next);
   };
 };
-router.post("/", wrapAsync(orderController.create));
+router.get("/pending", wrapAsync(orderController.getPendingOrders));
 router.get("/:id", wrapAsync(orderController.getOne));
 router.get("/", wrapAsync(orderController.getAll));
+router.post("/", wrapAsync(orderController.create));
 router.delete("/", wrapAsync(orderController.delete));
 router.put("/", wrapAsync(orderController.update));
 

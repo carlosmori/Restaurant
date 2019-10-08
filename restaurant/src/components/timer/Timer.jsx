@@ -27,22 +27,17 @@ const Timer = props => {
 
   React.useEffect(() => {
     const then = moment(new Date(props.deliverBy)).valueOf()
-    // const then = moment().add(10, 'seconds')
-    const now = moment().valueOf()
-    if (then - now > 0) {
-      setTimer(true)
-      id = setInterval(() => {
-        const updatedNow = moment().valueOf()
-        const duration = moment.duration(then - updatedNow, 'milliseconds')
-        const minutes = duration.minutes()
-        const seconds = duration.seconds()
-        if (minutes == 0 && seconds == 0) {
-          clearInterval(id)
-        }
-        setMinutes(minutes)
-        setSeconds(seconds)
-      }, 1000)
-    }
+    id = setInterval(() => {
+      const updatedNow = moment().valueOf()
+      const duration = moment.duration(then - updatedNow, 'milliseconds')
+      const minutes = duration.minutes()
+      const seconds = duration.seconds()
+      if (minutes == 0 && seconds == 0) {
+        clearInterval(id)
+      }
+      setMinutes(minutes)
+      setSeconds(seconds)
+    }, 1000)
     return () => {
       clearInterval(id)
     }
