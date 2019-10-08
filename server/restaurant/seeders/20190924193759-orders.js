@@ -7,7 +7,7 @@ module.exports = {
       [
         {
           user_id: 2,
-          status: 4,
+          status: 1,
           amount: 15,
           deliver_time: "2019-01-20",
           createdAt: new Date(),
@@ -15,7 +15,7 @@ module.exports = {
         },
         {
           user_id: 2,
-          status: 4,
+          status: 1,
           amount: 40,
           deliver_time: "2019-02-20",
           createdAt: new Date(),

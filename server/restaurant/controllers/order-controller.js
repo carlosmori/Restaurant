@@ -1,6 +1,7 @@
 const order = require("../models").order;
 const user = require("../models").user;
 const table = require("../models").table;
+const product = require("../models").product;
 const orderProduct = require("../models").order_product;
 const moment = require("moment");
 const Op = require("Sequelize").Op;
@@ -91,19 +92,9 @@ module.exports = {
     try {
       const pending_orders = await order.findAll({
         where: {
-          [Op.or]: [
-            {
-              status: {
-                [Op.eq]: 1
-              }
-            },
-            {
-              status: {
-                [Op.eq]: 2
-              }
-            }
-          ]
-        }
+          status: { [Op.in]: [1, 2] }
+        },
+        include: [{ model: product, through: { attributes: [] } }]
       });
       return res.status(200).json(pending_orders);
     } catch (error) {
