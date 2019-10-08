@@ -1,150 +1,51 @@
 import React from 'react'
 import MaterialTable from 'material-table'
+import {connect} from 'react-redux'
+import {fetchPendingOrders} from '../../../state/ducks/kitchen/actions'
+const Kitchen = props => {
+  const [state, setState] = React.useState({})
+  React.useEffect(() => {
+    props.fetchPendingOrders()
+  }, [props.fetchPendingOrders])
+  React.useEffect(() => {
+    setState({
+      columns: [
+        {title: 'Order #', field: 'id', type: 'numeric'},
+        {title: 'Status', field: 'status'},
+        {title: 'Deliver By', field: 'deliverTime'},
+      ],
+      data: props.pendingOrders.map(order => {
+        const {id, status, deliverTime} = order
+        return {
+          id,
+          status,
+          deliverTime,
+        }
+      }),
+    })
+  }, [props.pendingOrders])
 
-export default function Kitchen() {
-  const [state, setState] = React.useState({
-    columns: [
-      {title: 'Order #', field: 'id', type: 'numeric'},
-      {title: 'Dish Description', field: 'dishDescription'},
-      {title: 'Remaining', field: 'remaining'},
-      {title: 'Status', field: 'status'},
-      {title: 'Actions', field: 'actions'},
-    ],
-    data: [
-      {
-        id: 54541,
-        dishDescription: 'Hamburguer',
-        remaining: '10 Minutes',
-        status: 'Ready to be cooked',
-        actions: 'Start preparing',
-      },
-      {
-        id: 54542,
-        dishDescription: 'Hot dog',
-        remaining: '2 Minutes',
-        status: 'Ready to be cooked',
-        actions: 'Start preparing',
-      },
-      {
-        id: 54543,
-        dishDescription: 'Soup',
-        remaining: '4 Minutes',
-        status: 'Cooking',
-        actions: 'Start preparing',
-      },
-      {
-        id: 54544,
-        dishDescription: 'Cheese sticks',
-        remaining: '15 Minutes',
-        status: 'Cooking',
-        actions: 'Start preparing',
-      },
-      {
-        id: 54545,
-        dishDescription: 'Onions flavoured',
-        remaining: '12 Minutes',
-        status: 'Cooking',
-        actions: 'Start preparing',
-      },
-      {
-        id: 54546,
-        dishDescription: 'Soup',
-        remaining: '15 Minutes',
-        status: 'Cooking',
-        actions: 'Start preparing',
-      },
-      {
-        id: 54547,
-        dishDescription: 'Rock n Roll Steak',
-        remaining: '20 Minutes',
-        status: 'Ready to bispatch',
-        actions: 'Start preparing',
-      },
-      {
-        id: 54548,
-        dishDescription: 'Soup',
-        remaining: '15 Minutes',
-        status: 'Ready to bispatch',
-        actions: 'Start preparing',
-      },
-    ],
-  })
+  // const [state, setState] = React.useState({
+  //   columns: [
+  //     {title: 'Order #', field: 'id', type: 'numeric'},
+  //     {title: 'Status', field: 'status'},
+  //     {title: 'Deliver By', field: 'deliverTime'},
+  //   ],
+  //   data: props.pendingOrders.map(order => {
+  //     const {id, status, deliverTime} = order
+  //     return {
+  //       id,
+  //       status,
+  //       deliverTime,
+  //     }
+  //   }),
+  // })
 
   return (
     <MaterialTable
       title="Pending Dishes"
-      data={[
-        {
-          id: 1,
-          name: 'a',
-          surname: 'Baran',
-          birthYear: 1987,
-          birthCity: 63,
-          sex: 'Male',
-          type: 'adult',
-        },
-        {
-          id: 2,
-          name: 'b',
-          surname: 'Baran',
-          birthYear: 1987,
-          birthCity: 34,
-          sex: 'Female',
-          type: 'adult',
-          parentId: 1,
-        },
-        {
-          id: 3,
-          name: 'c',
-          surname: 'Baran',
-          birthYear: 1987,
-          birthCity: 34,
-          sex: 'Female',
-          type: 'child',
-          parentId: 1,
-        },
-        {
-          id: 4,
-          name: 'd',
-          surname: 'Baran',
-          birthYear: 1987,
-          birthCity: 34,
-          sex: 'Female',
-          type: 'child',
-          parentId: 3,
-        },
-        {
-          id: 5,
-          name: 'e',
-          surname: 'Baran',
-          birthYear: 1987,
-          birthCity: 34,
-          sex: 'Female',
-          type: 'child',
-        },
-        {
-          id: 6,
-          name: 'f',
-          surname: 'Baran',
-          birthYear: 1987,
-          birthCity: 34,
-          sex: 'Female',
-          type: 'child',
-          parentId: 5,
-        },
-      ]}
-      columns={[
-        {title: 'Adı', field: 'name'},
-        {title: 'Soyadı', field: 'surname'},
-        {title: 'Cinsiyet', field: 'sex'},
-        {title: 'Tipi', field: 'type', removable: false},
-        {title: 'Doğum Yılı', field: 'birthYear', type: 'numeric'},
-        {
-          title: 'Doğum Yeri',
-          field: 'birthCity',
-          lookup: {34: 'İstanbul', 63: 'Şanlıurfa'},
-        },
-      ]}
+      data={state.data}
+      columns={state.columns}
       parentChildData={(row, rows) => rows.find(a => a.id === row.parentId)}
       editable={{
         onRowAdd: newData =>
@@ -181,3 +82,85 @@ export default function Kitchen() {
     />
   )
 }
+const mapStateToProps = state => ({
+  pendingOrders: state.kitchen.pendingOrders,
+})
+export default connect(
+  mapStateToProps,
+  {
+    fetchPendingOrders,
+  }
+)(Kitchen)
+
+// data={[
+//   {
+//     id: 1,
+//     name: 'a',
+//     surname: 'Baran',
+//     birthYear: 1987,
+//     birthCity: 63,
+//     sex: 'Male',
+//     type: 'adult',
+//   },
+//   {
+//     id: 2,
+//     name: 'b',
+//     surname: 'Baran',
+//     birthYear: 1987,
+//     birthCity: 34,
+//     sex: 'Female',
+//     type: 'adult',
+//     parentId: 1,
+//   },
+//   {
+//     id: 3,
+//     name: 'c',
+//     surname: 'Baran',
+//     birthYear: 1987,
+//     birthCity: 34,
+//     sex: 'Female',
+//     type: 'child',
+//     parentId: 1,
+//   },
+//   {
+//     id: 4,
+//     name: 'd',
+//     surname: 'Baran',
+//     birthYear: 1987,
+//     birthCity: 34,
+//     sex: 'Female',
+//     type: 'child',
+//     parentId: 3,
+//   },
+//   {
+//     id: 5,
+//     name: 'e',
+//     surname: 'Baran',
+//     birthYear: 1987,
+//     birthCity: 34,
+//     sex: 'Female',
+//     type: 'child',
+//   },
+//   {
+//     id: 6,
+//     name: 'f',
+//     surname: 'Baran',
+//     birthYear: 1987,
+//     birthCity: 34,
+//     sex: 'Female',
+//     type: 'child',
+//     parentId: 5,
+//   },
+// ]}
+// columns={[
+//   {title: 'Adı', field: 'name'},
+//   {title: 'Soyadı', field: 'surname'},
+//   {title: 'Cinsiyet', field: 'sex'},
+//   {title: 'Tipi', field: 'type', removable: false},
+//   {title: 'Doğum Yılı', field: 'birthYear', type: 'numeric'},
+//   {
+//     title: 'Doğum Yeri',
+//     field: 'birthCity',
+//     lookup: {34: 'İstanbul', 63: 'Şanlıurfa'},
+//   },
+// ]}

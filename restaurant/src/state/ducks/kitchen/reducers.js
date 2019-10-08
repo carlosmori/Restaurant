@@ -1,13 +1,14 @@
-import {KITCHEN_TEST_PLAIN_ACTION} from './types'
+import {KITCHEN_TEST_PLAIN_ACTION, FETCH_PENDING_ORDERS} from './types'
 const initialState = {
-  BillingState: {},
+  pendingOrders: [],
 }
 
 export default (state = initialState, {type, payload}) => {
   switch (type) {
-    case KITCHEN_TEST_PLAIN_ACTION:
+    case FETCH_PENDING_ORDERS.SUCCESS:
       return {
         ...state,
+        pendingOrders: payload,
       }
     default:
       return state
