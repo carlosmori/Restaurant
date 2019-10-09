@@ -1,4 +1,4 @@
-import {MODAL_TOGGLE, DISPATCH_ORDER} from './types'
+import {MODAL_TOGGLE, TAKE_ORDER} from './types'
 const initialState = {
   isOrderMenuModalToggled: false,
   currentTableId: null,
@@ -16,7 +16,7 @@ export default (state = initialState, {type, payload}) => {
         isOrderMenuModalToggled: payload.isOrderMenuModalToggled,
         currentTableId: payload.tableId,
       }
-    case DISPATCH_ORDER.SUCCESS:
+    case TAKE_ORDER.SUCCESS:
       return {
         ...state,
         currentOrderHttp: {
@@ -24,7 +24,7 @@ export default (state = initialState, {type, payload}) => {
           success: payload.success,
         },
       }
-    case DISPATCH_ORDER.FAILED:
+    case TAKE_ORDER.FAILED:
       return {
         ...state,
         currentOrderHttp: {

@@ -6,12 +6,12 @@ module.exports = {
       "order_status",
       [
         {
-          description: "Ready to be cooked",
+          description: "In the kitchen",
           createdAt: new Date(),
           updatedAt: new Date()
         },
         {
-          description: "Ready to dispatch",
+          description: "Ready",
           createdAt: new Date(),
           updatedAt: new Date()
         },

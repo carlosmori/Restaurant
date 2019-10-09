@@ -36,18 +36,6 @@ const NavigationList = props => {
       </NavLink>
       <NavLink
         className="NavigationList__NavLink"
-        to={routes.orders}
-        onClick={() => setDashboardTitle(navigationLabels.ORDERS)}
-      >
-        <ListItem button>
-          <ListItemIcon>
-            <ShoppingCartIcon />
-          </ListItemIcon>
-          <ListItemText primary={navigationLabels.ORDERS} />
-        </ListItem>
-      </NavLink>
-      <NavLink
-        className="NavigationList__NavLink"
         to={routes.kitchen}
         onClick={() => setDashboardTitle(navigationLabels.KITCHEN)}
       >
@@ -56,6 +44,18 @@ const NavigationList = props => {
             <FastfoodIcon />
           </ListItemIcon>
           <ListItemText primary={navigationLabels.KITCHEN} />
+        </ListItem>
+      </NavLink>
+      <NavLink
+        className="NavigationList__NavLink"
+        to={routes.orders}
+        onClick={() => setDashboardTitle(navigationLabels.ORDERS)}
+      >
+        <ListItem button>
+          <ListItemIcon>
+            <ShoppingCartIcon />
+          </ListItemIcon>
+          <ListItemText primary={navigationLabels.ORDERS} />
         </ListItem>
       </NavLink>
       <NavLink

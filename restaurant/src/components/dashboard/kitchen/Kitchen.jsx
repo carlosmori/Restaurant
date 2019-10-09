@@ -1,85 +1,136 @@
 import React from 'react'
 import MaterialTable from 'material-table'
 import {connect} from 'react-redux'
-import {fetchPendingOrders} from '../../../state/ducks/kitchen/actions'
+import {makeStyles} from '@material-ui/core/styles'
+import {fetchPendingOrders, dispatchProduct} from '../../../state/ducks/kitchen/actions'
+import Button from '@material-ui/core/Button'
+import Modal from '@material-ui/core/Modal'
+
+const getModalStyle = () => {
+  const top = 50
+  const left = 50
+  return {
+    top: `${top}%`,
+    left: `${left}%`,
+    transform: `translate(-${top}%, -${left}%)`,
+  }
+}
+const useStyles = makeStyles(theme => ({
+  paper: {
+    position: 'absolute',
+    width: 400,
+    backgroundColor: theme.palette.background.paper,
+    border: '2px solid #000',
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing(2, 4, 3),
+  },
+}))
 const Kitchen = props => {
-  const [state, setState] = React.useState({})
+  const [state, setState] = React.useState({
+    columns: [
+      {title: 'Order #', field: 'orderId', type: 'numeric'},
+      {title: 'Description', field: 'description'},
+      {title: 'Deliver By', field: 'deliverBy'},
+      {
+        render: rowData => (
+          <div>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => toggleModal(true, rowData)}
+            >
+              Dispatch
+            </Button>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={() => toggleModal(false)}
+            >
+              Cancel
+            </Button>
+          </div>
+        ),
+      },
+    ],
+    data: [],
+  })
+  const [open, setOpen] = React.useState(false)
+  const [rowData, setRowData] = React.useState({})
+  const [modalStyle] = React.useState(getModalStyle)
+
+  const classes = useStyles()
+
+  const dispatchProduct = rowData => {
+    const {orderId, productId} = rowData
+    props.dispatchProduct({orderId, productId})
+    toggleModal(false)
+    setRowData({})
+  }
+  const toggleModal = (flag, rowData) => {
+    setOpen(flag)
+    if (rowData) setRowData(rowData)
+  }
+
   React.useEffect(() => {
     props.fetchPendingOrders()
   }, [props.fetchPendingOrders])
   React.useEffect(() => {
-    setState({
-      columns: [
-        {title: 'Order #', field: 'id', type: 'numeric'},
-        {title: 'Status', field: 'status'},
-        {title: 'Deliver By', field: 'deliverTime'},
-      ],
-      data: props.pendingOrders.map(order => {
-        const {id, status, deliverTime} = order
-        return {
-          id,
-          status,
-          deliverTime,
-        }
-      }),
-    })
+    if (props.pendingOrders.length > 0) {
+      const orderProducts = []
+      props.pendingOrders.forEach(order => {
+        return order.products.length > 0
+          ? order.products.map(product =>
+              orderProducts.push({
+                orderId: order.id,
+                deliverBy: order.deliver_time,
+                description: product.description,
+                productId: product.id,
+              })
+            )
+          : props.dispatchOrder()
+      })
+      setState({columns: [...state.columns], data: orderProducts})
+    }
   }, [props.pendingOrders])
 
-  // const [state, setState] = React.useState({
-  //   columns: [
-  //     {title: 'Order #', field: 'id', type: 'numeric'},
-  //     {title: 'Status', field: 'status'},
-  //     {title: 'Deliver By', field: 'deliverTime'},
-  //   ],
-  //   data: props.pendingOrders.map(order => {
-  //     const {id, status, deliverTime} = order
-  //     return {
-  //       id,
-  //       status,
-  //       deliverTime,
-  //     }
-  //   }),
-  // })
-
   return (
-    <MaterialTable
-      title="Pending Dishes"
-      data={state.data}
-      columns={state.columns}
-      parentChildData={(row, rows) => rows.find(a => a.id === row.parentId)}
-      editable={{
-        onRowAdd: newData =>
-          new Promise(resolve => {
-            setTimeout(() => {
-              resolve()
-              const data = [...state.data]
-              data.push(newData)
-              setState({...state, data})
-            }, 600)
-          }),
-        onRowUpdate: (newData, oldData) =>
-          new Promise(resolve => {
-            setTimeout(() => {
-              resolve()
-              const data = [...state.data]
-              data[data.indexOf(oldData)] = newData
-              setState({...state, data})
-            }, 600)
-          }),
-        onRowDelete: oldData =>
-          new Promise(resolve => {
-            setTimeout(() => {
-              resolve()
-              const data = [...state.data]
-              data.splice(data.indexOf(oldData), 1)
-              setState({...state, data})
-            }, 600)
-          }),
-      }}
-      options={{
-        actionsColumnIndex: -1,
-      }}
-    />
+    <div>
+      <MaterialTable
+        title="Pending Dishes"
+        columns={state.columns}
+        data={state.data}
+        options={{
+          actionsColumnIndex: -1,
+        }}
+      />
+      <Modal
+        aria-labelledby="simple-modal-title"
+        aria-describedby="simple-modal-description"
+        open={open}
+        onClose={() => toggleModal(false)}
+      >
+        <div style={modalStyle} className={classes.paper}>
+          <h2 id="simple-modal-title">Are you sure you want to dispatch the product?</h2>
+          <div>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => dispatchProduct(rowData)}
+            >
+              Dispatch
+            </Button>
+            {/* @todo allow the user to cancel a product and ask to cancel the entire order, work on styles */}
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={() => toggleModal(false)}
+            >
+              Cancel
+            </Button>
+          </div>
+        </div>
+      </Modal>
+    </div>
   )
 }
 const mapStateToProps = state => ({
@@ -89,78 +140,6 @@ export default connect(
   mapStateToProps,
   {
     fetchPendingOrders,
+    dispatchProduct,
   }
 )(Kitchen)
-
-// data={[
-//   {
-//     id: 1,
-//     name: 'a',
-//     surname: 'Baran',
-//     birthYear: 1987,
-//     birthCity: 63,
-//     sex: 'Male',
-//     type: 'adult',
-//   },
-//   {
-//     id: 2,
-//     name: 'b',
-//     surname: 'Baran',
-//     birthYear: 1987,
-//     birthCity: 34,
-//     sex: 'Female',
-//     type: 'adult',
-//     parentId: 1,
-//   },
-//   {
-//     id: 3,
-//     name: 'c',
-//     surname: 'Baran',
-//     birthYear: 1987,
-//     birthCity: 34,
-//     sex: 'Female',
-//     type: 'child',
-//     parentId: 1,
-//   },
-//   {
-//     id: 4,
-//     name: 'd',
-//     surname: 'Baran',
-//     birthYear: 1987,
-//     birthCity: 34,
-//     sex: 'Female',
-//     type: 'child',
-//     parentId: 3,
-//   },
-//   {
-//     id: 5,
-//     name: 'e',
-//     surname: 'Baran',
-//     birthYear: 1987,
-//     birthCity: 34,
-//     sex: 'Female',
-//     type: 'child',
-//   },
-//   {
-//     id: 6,
-//     name: 'f',
-//     surname: 'Baran',
-//     birthYear: 1987,
-//     birthCity: 34,
-//     sex: 'Female',
-//     type: 'child',
-//     parentId: 5,
-//   },
-// ]}
-// columns={[
-//   {title: 'Adı', field: 'name'},
-//   {title: 'Soyadı', field: 'surname'},
-//   {title: 'Cinsiyet', field: 'sex'},
-//   {title: 'Tipi', field: 'type', removable: false},
-//   {title: 'Doğum Yılı', field: 'birthYear', type: 'numeric'},
-//   {
-//     title: 'Doğum Yeri',
-//     field: 'birthCity',
-//     lookup: {34: 'İstanbul', 63: 'Şanlıurfa'},
-//   },
-// ]}

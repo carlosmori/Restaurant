@@ -14,6 +14,9 @@ module.exports = {
       product_id: {
         type: Sequelize.INTEGER
       },
+      dispatched: {
+        type: Sequelize.BOOLEAN
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

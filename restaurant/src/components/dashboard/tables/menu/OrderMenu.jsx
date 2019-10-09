@@ -12,7 +12,7 @@ import Input from '@material-ui/core/Input'
 import Chip from '@material-ui/core/Chip'
 import ListItemText from '@material-ui/core/ListItemText'
 import {connect} from 'react-redux'
-import {toggleModal, dispatchOrder} from '../../../../state/ducks/order-menu/actions'
+import {toggleModal, takeOrder} from '../../../../state/ducks/order-menu/actions'
 import {makeStyles} from '@material-ui/core/styles'
 import {ORDER_STATUS_VALUE} from '../../../../utils/enums/orderStatusEnum'
 
@@ -106,7 +106,7 @@ const OrderMenu = props => {
     )
   }, [selectedProducts])
 
-  const dispatchOrder = () => {
+  const takeOrder = () => {
     const order = {
       amount: orderTotalAmount,
       cook_time: orderEstimatedCookTime,
@@ -114,7 +114,7 @@ const OrderMenu = props => {
       products: selectedProducts.map(product => product.id),
     }
     handleClose()
-    props.dispatchOrder(order)
+    props.takeOrder(order)
   }
   const handleClose = () => {
     props.toggleModal({isOrderMenuModalToggled: false, tableId: undefined})
@@ -191,21 +191,21 @@ const OrderMenu = props => {
             </div>
             <div className={classes.buttonsContainer}>
               <Button
+                variant="contained"
+                color="primary"
+                disabled={orderTotalAmount === 0 || orderEstimatedCookTime === 0}
+                onClick={takeOrder}
+                className={classes.button}
+              >
+                Confirm
+              </Button>
+              <Button
                 className={classes.button}
                 variant="contained"
                 color="secondary"
                 onClick={handleClose}
               >
                 Close
-              </Button>
-              <Button
-                variant="contained"
-                color="primary"
-                disabled={orderTotalAmount === 0 || orderEstimatedCookTime === 0}
-                onClick={dispatchOrder}
-                className={classes.button}
-              >
-                Confirm
               </Button>
             </div>
           </form>
@@ -222,6 +222,6 @@ export default connect(
   mapStateToProps,
   {
     toggleModal,
-    dispatchOrder,
+    takeOrder,
   }
 )(OrderMenu)

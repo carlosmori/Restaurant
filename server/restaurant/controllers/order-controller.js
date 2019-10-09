@@ -87,16 +87,57 @@ module.exports = {
       return res.status(500).json({ error: error.toString() });
     }
   },
-  //Get one
+  //Get Pending Orders
   async getPendingOrders(req, res) {
     try {
+      //@todo refactor order status enum
       const pending_orders = await order.findAll({
         where: {
-          status: { [Op.in]: [1, 2] }
+          status: 1
         },
-        include: [{ model: product, through: { attributes: [] } }]
+        include: [
+          {
+            model: product,
+            through: {
+              where: {
+                dispatched: 0
+              },
+              attributes: []
+            }
+          }
+        ]
       });
       return res.status(200).json(pending_orders);
+    } catch (error) {
+      return res.status(500).json({ error: error.toString() });
+    }
+  },
+  //Dispatch Product
+  async dispatchProduct(req, res) {
+    try {
+      const { orderId, productId } = req.body;
+      const orderProductIndex = await orderProduct.update(
+        {
+          dispatched: 1
+        },
+        {
+          where: { order_id: orderId, product_id: productId }
+        }
+      );
+      const current_order = await order.findOne({
+        where: { id: orderId },
+        include: [
+          {
+            model: product,
+            where: {
+              id: productId
+            },
+            through: { attributes: [] }
+          }
+        ]
+      });
+      const response = current_order;
+      return res.status(201).json(response);
     } catch (error) {
       return res.status(500).json({ error: error.toString() });
     }

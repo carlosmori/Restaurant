@@ -12,6 +12,7 @@ router.get("/:id", wrapAsync(orderController.getOne));
 router.get("/", wrapAsync(orderController.getAll));
 router.post("/", wrapAsync(orderController.create));
 router.delete("/", wrapAsync(orderController.delete));
+router.put("/dispatch", wrapAsync(orderController.dispatchProduct));
 router.put("/", wrapAsync(orderController.update));
 
 module.exports = router;
