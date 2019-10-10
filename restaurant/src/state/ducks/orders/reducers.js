@@ -1,13 +1,15 @@
-import {ORDERS_TEST_PLAIN_ACTION} from './types'
+import {FETCH_ORDERS} from './types'
+
 const initialState = {
-  BillingState: {},
+  orderList: [],
 }
 
 export default (state = initialState, {type, payload}) => {
   switch (type) {
-    case ORDERS_TEST_PLAIN_ACTION:
+    case FETCH_ORDERS.SUCCESS:
       return {
         ...state,
+        orderList: [...payload.success],
       }
     default:
       return state

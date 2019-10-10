@@ -1,83 +1,37 @@
 import React from 'react'
 import MaterialTable from 'material-table'
-
-export default function Orders() {
+import {connect} from 'react-redux'
+import {fetchOrders} from '../../../state/ducks/orders/actions'
+const Orders = props => {
   const [state, setState] = React.useState({
     columns: [
       {title: 'Order #', field: 'id', type: 'numeric'},
-      {title: 'Waiter', field: 'name'},
-      {title: 'Status', field: 'status'},
-      {title: 'Detail', field: 'detail'},
-      {title: 'Remaining', field: 'remaining'},
+      {title: 'Waiter/Waitress', field: 'waiterWaitressName'},
+      {title: 'Detail', field: 'deliver_time'},
       {title: 'Total Amount', field: 'amount'},
+      {title: 'Status', field: 'status'},
     ],
-    data: [
-      {
-        id: 54541,
-        name: 'Megan Fox',
-        status: 'Ready to dispatch',
-        detail: 'Hamburguer with cheese',
-        remaining: '6 minutes',
-        amount: '$ 2.500,83',
-      },
-      {
-        id: 54542,
-        name: 'Margot Robbie',
-        status: 'Delivered',
-        detail: 'Hamburguer with cheese',
-        remaining: '6 minutes',
-        amount: '$ 2.500,83',
-      },
-      {
-        id: 54543,
-        name: 'Margot Robbie',
-        status: 'Delivered',
-        detail: 'Hamburguer with cheese',
-        remaining: '6 minutes',
-        amount: '$ 2.500,83',
-      },
-      {
-        id: 54544,
-        name: 'Megan Fox',
-        status: 'Delivered',
-        detail: 'Hamburguer with cheese',
-        remaining: '6 minutes',
-        amount: '$ 2.500,83',
-      },
-      {
-        id: 54545,
-        name: 'Megan Fox',
-        status: 'Ready to dispatch',
-        detail: 'Hamburguer with cheese',
-        remaining: '6 minutes',
-        amount: '$ 2.500,83',
-      },
-      {
-        id: 54546,
-        name: 'Tom Hanks',
-        status: 'Canceled',
-        detail: 'Hamburguer with cheese',
-        remaining: '6 minutes',
-        amount: '$ 2.500,83',
-      },
-      {
-        id: 54547,
-        name: 'Tom Hanks',
-        status: 'In preparation',
-        detail: 'Hamburguer with cheese',
-        remaining: '6 minutes',
-        amount: '$ 2.500,83',
-      },
-      {
-        id: 54548,
-        name: 'Tom Hanks',
-        status: 'In preparation',
-        detail: 'Hamburguer with cheese',
-        remaining: '6 minutes',
-        amount: '$ 2.500,83',
-      },
-    ],
+    data: [],
   })
+  React.useEffect(() => {
+    props.fetchOrders()
+  }, [props.fetchOrders])
+  React.useEffect(() => {
+    if (props.orderList.length) {
+      const orderListFormatted = props.orderList.map(order => {
+        const {id, deliver_time, amount, status, waiterWaitress} = order
+        const waiterWaitressName = `${waiterWaitress.name}  ${waiterWaitress.last_name}`
+        return {
+          id,
+          waiterWaitressName,
+          deliver_time,
+          amount,
+          status,
+        }
+      })
+      setState({columns: [...state.columns], data: [...orderListFormatted]})
+    }
+  }, [props.orderList])
 
   return (
     <MaterialTable
@@ -119,3 +73,10 @@ export default function Orders() {
     />
   )
 }
+const mapStateToProps = state => ({
+  orderList: state.orders.orderList,
+})
+export default connect(
+  mapStateToProps,
+  {fetchOrders}
+)(Orders)
