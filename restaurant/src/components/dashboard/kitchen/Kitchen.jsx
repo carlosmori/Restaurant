@@ -2,9 +2,14 @@ import React from 'react'
 import MaterialTable from 'material-table'
 import {connect} from 'react-redux'
 import {makeStyles} from '@material-ui/core/styles'
-import {fetchPendingOrders, dispatchProduct} from '../../../state/ducks/kitchen/actions'
+import {
+  fetchPendingDishes,
+  dispatchProduct,
+  dispatchOrder,
+} from '../../../state/ducks/kitchen/actions'
 import Button from '@material-ui/core/Button'
 import Modal from '@material-ui/core/Modal'
+import {ORDER_STATUS_KEY, ORDER_STATUS_VALUE} from '../../../utils/enums/orderStatusEnum'
 
 const getModalStyle = () => {
   const top = 50
@@ -72,12 +77,13 @@ const Kitchen = props => {
   }
 
   React.useEffect(() => {
-    props.fetchPendingOrders()
-  }, [props.fetchPendingOrders])
+    props.fetchPendingDishes()
+  }, [props.fetchPendingDishes])
   React.useEffect(() => {
     if (props.pendingOrders.length > 0) {
       const orderProducts = []
       props.pendingOrders.forEach(order => {
+        const {id, status} = order
         return order.products.length > 0
           ? order.products.map(product =>
               orderProducts.push({
@@ -87,8 +93,8 @@ const Kitchen = props => {
                 productId: product.id,
               })
             )
-          : null
-          // : props.dispatchOrder()
+          : props.dispatchOrder({id, status: ORDER_STATUS_VALUE.READY_TO_DISPATCH})
+        // : props.dispatchOrder()
       })
       setState({columns: [...state.columns], data: orderProducts})
     }
@@ -140,7 +146,8 @@ const mapStateToProps = state => ({
 export default connect(
   mapStateToProps,
   {
-    fetchPendingOrders,
+    fetchPendingDishes,
     dispatchProduct,
+    dispatchOrder,
   }
 )(Kitchen)

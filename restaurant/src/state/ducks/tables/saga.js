@@ -39,13 +39,9 @@ export function* fetchTables() {
 export function* fetchOrderMenu() {
   try {
     const response = yield call(fecthOrderMenuHttpCall)
-    //tables
     const products = response.data
-
-    // dispatch a success action to the store with the new dog
     yield put({type: FETCH_ORDER_MENU.SUCCESS, payload: {products}})
   } catch (error) {
-    // dispatch a failure action to the store with the error
     yield put({type: FETCH_ORDER_MENU.FAILED, error})
   }
 }

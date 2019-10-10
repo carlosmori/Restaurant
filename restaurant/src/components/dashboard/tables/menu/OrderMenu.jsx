@@ -191,6 +191,14 @@ const OrderMenu = props => {
             </div>
             <div className={classes.buttonsContainer}>
               <Button
+                className={classes.button}
+                variant="contained"
+                color="secondary"
+                onClick={handleClose}
+              >
+                Close
+              </Button>
+              <Button
                 variant="contained"
                 color="primary"
                 disabled={orderTotalAmount === 0 || orderEstimatedCookTime === 0}
@@ -198,14 +206,6 @@ const OrderMenu = props => {
                 className={classes.button}
               >
                 Confirm
-              </Button>
-              <Button
-                className={classes.button}
-                variant="contained"
-                color="secondary"
-                onClick={handleClose}
-              >
-                Close
               </Button>
             </div>
           </form>

@@ -1,7 +1,7 @@
 import {
   KITCHEN_TEST_ACTION,
   KITCHEN_TEST_PLAIN_ACTION,
-  FETCH_PENDING_ORDERS,
+  FETCH_PENDING_DISHES,
   DISPATCH_PRODUCT,
   DISPATCH_ORDER,
 } from './types'
@@ -16,8 +16,8 @@ export const kitchenTestPlainAction = () => ({
   type: KITCHEN_TEST_PLAIN_ACTION,
 })
 //Without payload
-export const fetchPendingOrders = () => ({
-  type: FETCH_PENDING_ORDERS.REQUEST,
+export const fetchPendingDishes = () => ({
+  type: FETCH_PENDING_DISHES.REQUEST,
 })
 //Without payload
 export const dispatchProduct = payload => ({

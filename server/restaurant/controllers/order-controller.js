@@ -19,7 +19,7 @@ module.exports = {
         .format("YYYY-MM-DD HH:mm:ss");
       const new_order = await order.create({
         user_id,
-        status: 2,
+        status: 1,
         amount,
         deliver_time
       });
@@ -34,7 +34,8 @@ module.exports = {
       for (const id of products) {
         await orderProduct.create({
           order_id: new_order.id,
-          product_id: id
+          product_id: id,
+          dispatched: 0
         });
       }
       let response = new_order.toJSON();
@@ -87,8 +88,8 @@ module.exports = {
       return res.status(500).json({ error: error.toString() });
     }
   },
-  //Get Pending Orders
-  async getPendingOrders(req, res) {
+  //Get Pending Dishes
+  async getPendingDishes(req, res) {
     try {
       //@todo refactor order status enum
       const pending_orders = await order.findAll({
@@ -103,6 +104,37 @@ module.exports = {
                 dispatched: 0
               },
               attributes: []
+            }
+          }
+        ]
+      });
+      return res.status(200).json(pending_orders);
+    } catch (error) {
+      return res.status(500).json({ error: error.toString() });
+    }
+  },
+  //Get Pending Orders
+  async getPendingOrders(req, res) {
+    try {
+      //@todo refactor order status enum
+      const pending_orders = await order.findAll({
+        where: {
+          status: { [Op.or]: [1, 2] }
+        },
+        include: [
+          {
+            model: user,
+            as: "waiterWaitress",
+            attributes: {
+              exclude: [
+                "id",
+                "date_of_birth",
+                "role_id",
+                "email",
+                "cellphone",
+                "createdAt",
+                "updatedAt"
+              ]
             }
           }
         ]
@@ -179,9 +211,10 @@ module.exports = {
         },
         { where: { id } }
       );
-      const response = orderUpdated[0]
-        ? `Order with id ${id} updated successfully`
-        : `No order found that matched provided criteria`;
+      const updated_order = await order.findOne({
+        where: { id }
+      });
+      const response = updated_order;
       return res.status(201).json(response);
     } catch (error) {
       return res.status(500).json({ error: error.toString() });

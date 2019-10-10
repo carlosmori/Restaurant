@@ -1,14 +1,14 @@
-import {FETCH_PENDING_ORDERS, DISPATCH_PRODUCT, DISPATCH_ORDER} from './types'
+import {FETCH_PENDING_DISHES, DISPATCH_PRODUCT} from './types'
 const initialState = {
   pendingOrders: [],
 }
 
 export default (state = initialState, {type, payload}) => {
   switch (type) {
-    case FETCH_PENDING_ORDERS.SUCCESS:
+    case FETCH_PENDING_DISHES.SUCCESS:
       return {
         ...state,
-        pendingOrders: payload,
+        pendingOrders: [...payload],
       }
     case DISPATCH_PRODUCT.SUCCESS:
       const orderId = payload.id
@@ -22,12 +22,6 @@ export default (state = initialState, {type, payload}) => {
       return {
         ...state,
         pendingOrders: [...newPendingOrders],
-      }
-    case DISPATCH_ORDER.SUCCESS:
-      //@todo this action should be handled in order reducer
-      return {
-        ...state,
-        pendingOrders: [...state.pendingOrders],
       }
     default:
       return state

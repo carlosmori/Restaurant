@@ -1,4 +1,4 @@
-import {FETCH_ORDERS} from './types'
+import {FETCH_ORDERS, DELIVER_ORDER} from './types'
 
 const initialState = {
   orderList: [],
@@ -10,6 +10,13 @@ export default (state = initialState, {type, payload}) => {
       return {
         ...state,
         orderList: [...payload.success],
+      }
+    case DELIVER_ORDER.SUCCESS:
+      const deliveredOrder = payload
+      const newOrderList = state.orderList.filter(order => order.id !== deliveredOrder.id)
+      return {
+        ...state,
+        orderList: [...newOrderList],
       }
     default:
       return state

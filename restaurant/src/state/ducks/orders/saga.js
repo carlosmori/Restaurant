@@ -1,9 +1,7 @@
 import {all, put, call, takeLatest} from 'redux-saga/effects'
 import {axios} from '../../../utils/http/axios-singleton'
 
-import {
-  FETCH_ORDERS,
-} from './types'
+import {FETCH_ORDERS, DELIVER_ORDER} from './types'
 import {DASHBOARD_LOADING, DASHBOARD_SNACKBAR} from '../dashboard/types'
 
 export function* fetchOrders() {
@@ -25,12 +23,42 @@ export function* fetchOrders() {
     })
   }
 }
-
-const fetchOrdersHttpCall = () => axios.get(`/orders`)
+export function* deliverOrder(action) {
+  try {
+    yield put({type: DASHBOARD_LOADING, payload: {loading: true}})
+    const response = yield call(deliverOrderHttpCall, action.payload)
+    yield timeout(500)
+    //@todo Dispatch order success should modify order reducer, to update the status and allow the user
+    //to deliver the order to the table
+    yield put({
+      type: DELIVER_ORDER.SUCCESS,
+      payload: response.data,
+    })
+    yield put({type: DASHBOARD_LOADING, payload: {loading: false}})
+    yield put({
+      type: DASHBOARD_SNACKBAR,
+      payload: {
+        show: true,
+        message: 'Order delivered successfully',
+        variant: 'success',
+      },
+    })
+  } catch (error) {
+    yield put({type: DELIVER_ORDER.FAILED, payload: {error}})
+    yield put({type: DASHBOARD_LOADING, payload: {loading: false}})
+    yield put({
+      type: DASHBOARD_SNACKBAR,
+      payload: {show: true, message: 'An error has occurred', variant: 'warning'},
+    })
+  }
+}
+const fetchOrdersHttpCall = () => axios.get(`/orders/pendingOrders`)
+const deliverOrderHttpCall = payload => axios.put('/orders', {...payload})
 
 export default function* root() {
   yield all([
     takeLatest(FETCH_ORDERS.REQUEST, fetchOrders),
+    takeLatest(DELIVER_ORDER.REQUEST, deliverOrder),
   ])
 }
 

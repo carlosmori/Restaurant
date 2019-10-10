@@ -1,15 +1,40 @@
 import React from 'react'
 import MaterialTable from 'material-table'
 import {connect} from 'react-redux'
-import {fetchOrders} from '../../../state/ducks/orders/actions'
+import Button from '@material-ui/core/Button'
+import {fetchOrders, deliverOrder} from '../../../state/ducks/orders/actions'
+import {ORDER_STATUS_KEY, ORDER_STATUS_VALUE} from '../../../utils/enums/orderStatusEnum'
 const Orders = props => {
+  //@todo strong type column and field names
+  const deliverOrder = order => {
+    props.deliverOrder({id: order.id, status: ORDER_STATUS_VALUE.DELIVERED})
+  }
   const [state, setState] = React.useState({
     columns: [
       {title: 'Order #', field: 'id', type: 'numeric'},
       {title: 'Waiter/Waitress', field: 'waiterWaitressName'},
       {title: 'Detail', field: 'deliver_time'},
       {title: 'Total Amount', field: 'amount'},
-      {title: 'Status', field: 'status'},
+      {
+        title: 'Status',
+        field: 'status',
+        render: rowData => <div>{ORDER_STATUS_KEY[rowData.status]}</div>,
+      },
+      {
+        title: 'Actions',
+        render: rowData => (
+          <div>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => deliverOrder(rowData)}
+              disabled={rowData.status != 2}
+            >
+              Deliver
+            </Button>
+          </div>
+        ),
+      },
     ],
     data: [],
   })
@@ -34,43 +59,7 @@ const Orders = props => {
   }, [props.orderList])
 
   return (
-    <MaterialTable
-      title="Pending Orders"
-      columns={state.columns}
-      data={state.data}
-      editable={{
-        onRowAdd: newData =>
-          new Promise(resolve => {
-            setTimeout(() => {
-              resolve()
-              const data = [...state.data]
-              data.push(newData)
-              setState({...state, data})
-            }, 600)
-          }),
-        onRowUpdate: (newData, oldData) =>
-          new Promise(resolve => {
-            setTimeout(() => {
-              resolve()
-              const data = [...state.data]
-              data[data.indexOf(oldData)] = newData
-              setState({...state, data})
-            }, 600)
-          }),
-        onRowDelete: oldData =>
-          new Promise(resolve => {
-            setTimeout(() => {
-              resolve()
-              const data = [...state.data]
-              data.splice(data.indexOf(oldData), 1)
-              setState({...state, data})
-            }, 600)
-          }),
-      }}
-      options={{
-        actionsColumnIndex: -1,
-      }}
-    />
+    <MaterialTable title="Pending Orders" columns={state.columns} data={state.data} />
   )
 }
 const mapStateToProps = state => ({
@@ -78,5 +67,5 @@ const mapStateToProps = state => ({
 })
 export default connect(
   mapStateToProps,
-  {fetchOrders}
+  {fetchOrders, deliverOrder}
 )(Orders)

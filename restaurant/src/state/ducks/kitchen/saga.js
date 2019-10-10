@@ -5,20 +5,20 @@
 import {all, put, call, takeLatest} from 'redux-saga/effects'
 import {axios} from '../../../utils/http/axios-singleton'
 
-import {FETCH_PENDING_ORDERS, DISPATCH_PRODUCT, DISPATCH_ORDER} from './types'
+import {FETCH_PENDING_DISHES, DISPATCH_PRODUCT, DISPATCH_ORDER} from './types'
 import {DASHBOARD_SNACKBAR, DASHBOARD_LOADING} from '../dashboard/types'
 
-export function* fetchPendingOrders(action) {
+export function* fetchPendingDishes(action) {
   try {
     yield put({type: DASHBOARD_LOADING, payload: {loading: true}})
-    const response = yield call(fetchPendingOrdersHttpCall)
+    const response = yield call(fetchPendingDishesHttpCall)
     yield put({
-      type: FETCH_PENDING_ORDERS.SUCCESS,
+      type: FETCH_PENDING_DISHES.SUCCESS,
       payload: response.data,
     })
     yield put({type: DASHBOARD_LOADING, payload: {loading: false}})
   } catch (error) {
-    yield put({type: FETCH_PENDING_ORDERS.FAILED, payload: {error}})
+    yield put({type: FETCH_PENDING_DISHES.FAILED, payload: {error}})
     yield put({type: DASHBOARD_LOADING, payload: {loading: false}})
     yield put({
       type: DASHBOARD_SNACKBAR,
@@ -83,12 +83,12 @@ export function* dispatchOrder(action) {
   }
 }
 const dispatchProductHttpCall = payload => axios.put('/orders/dispatch', {...payload})
-const dispatchOrderHttpCall = payload => axios.put('/orders/dispatch', {...payload})
-const fetchPendingOrdersHttpCall = () => axios.get('/orders/pending')
+const dispatchOrderHttpCall = payload => axios.put('/orders', {...payload})
+const fetchPendingDishesHttpCall = () => axios.get('/orders/pendingDishes')
 
 export default function* root() {
   yield all([
-    takeLatest(FETCH_PENDING_ORDERS.REQUEST, fetchPendingOrders),
+    takeLatest(FETCH_PENDING_DISHES.REQUEST, fetchPendingDishes),
     takeLatest(DISPATCH_PRODUCT.REQUEST, dispatchProduct),
     takeLatest(DISPATCH_ORDER.REQUEST, dispatchOrder),
   ])
