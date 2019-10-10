@@ -87,7 +87,8 @@ const Kitchen = props => {
                 productId: product.id,
               })
             )
-          : props.dispatchOrder()
+          : null
+          // : props.dispatchOrder()
       })
       setState({columns: [...state.columns], data: orderProducts})
     }

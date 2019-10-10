@@ -3,26 +3,9 @@
  * @desc Session
  */
 import {all, call, put, takeLatest} from 'redux-saga/effects'
-import {
-  USERS_TEST_ACTION,
-  USERS_TEST_ACTION_FAILED,
-  USERS_TEST_ACTION_SUCCESS,
-  FETCH_USER,
-  UPDATE_USER,
-  DELETE_USER,
-  ADD_USER,
-} from './types'
+import {FETCH_USER, UPDATE_USER, DELETE_USER, ADD_USER} from './types'
 import {axios} from '../../../utils/http/axios-singleton'
-/**
- * Login
- */
-export function* testSaga() {
-  try {
-    yield put({type: USERS_TEST_ACTION_SUCCESS, payload: 'Test'})
-  } catch (error) {
-    yield put({type: USERS_TEST_ACTION_FAILED, error})
-  }
-}
+
 export function* fetchUsers() {
   try {
     const response = yield call(fetchUserHttpCall)
@@ -98,7 +81,6 @@ const addUserHttpCall = newUser =>
  */
 export default function* root() {
   yield all([
-    takeLatest(USERS_TEST_ACTION, testSaga),
     takeLatest(FETCH_USER.REQUEST, fetchUsers),
     takeLatest(UPDATE_USER.REQUEST, updateUser),
     takeLatest(DELETE_USER.REQUEST, deleteUser),
