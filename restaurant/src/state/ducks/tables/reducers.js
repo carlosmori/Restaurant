@@ -17,16 +17,18 @@ export default (state = initialState, {type, payload}) => {
         productsList: payload.products,
       }
     case UPDATE_TABLE:
-      let {tablesList} = state
-      const tableIndex = tablesList.findIndex(table => table.id === payload.tableId)
-      tablesList[tableIndex] = {
-        ...state.tablesList[tableIndex],
-        status: payload.status,
-        currentOrder: payload,
-      }
+      const {currentOrder, tableStatus} = payload
+      let newTablesList = [...state.tablesList]
+      const tableIndex = newTablesList.findIndex(
+        table => table.id === currentOrder.tableId
+      )
+      let updatedTable = {...newTablesList[tableIndex]}
+      updatedTable.status = tableStatus
+      updatedTable.currentOrder = currentOrder
+      newTablesList[tableIndex] = updatedTable
       return {
         ...state,
-        tablesList: [...tablesList],
+        tablesList: [...newTablesList],
       }
     default:
       return state

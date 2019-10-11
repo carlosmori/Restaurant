@@ -6,22 +6,27 @@ module.exports = {
       "order_status",
       [
         {
-          description: "In the kitchen",
+          description: "Ready to be cooked",
           createdAt: new Date(),
           updatedAt: new Date()
         },
         {
-          description: "Ready",
+          description: "Cooking",
           createdAt: new Date(),
           updatedAt: new Date()
         },
         {
-          description: "Cancelled",
+          description: "Ready to deliver",
           createdAt: new Date(),
           updatedAt: new Date()
         },
         {
           description: "Delivered",
+          createdAt: new Date(),
+          updatedAt: new Date()
+        },
+        {
+          description: "Cancelled",
           createdAt: new Date(),
           updatedAt: new Date()
         }

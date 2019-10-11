@@ -20,12 +20,6 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 export const Tables = props => {
-  React.useEffect(() => {
-    if (props.newOrder) {
-      props.updateTable(props.newOrder)
-      //props.showInformativeDialog(true)
-    }
-  }, [props.newOrder])
   useEffect(() => {
     props.fetchTables()
     return () => {}
@@ -37,14 +31,16 @@ export const Tables = props => {
   useEffect(() => {
     return () => {}
   }, [props.isOrderMenuModalToggled])
+  useEffect(() => {
+    console.log('enter tables')
+    return () => {}
+  }, [props.tables])
 
   const classes = useStyles()
   return (
     <div className={classes.root}>
       <Grid container spacing={3} className={classes.gridContainer}>
-        {props.tables.map((value, index) => {
-          return <Table table={value} index={index} key={value.id} />
-        })}
+        {props.tables.map((value, index) => <Table table={value} index={index} key={value.id} />)}
       </Grid>
       <OrderMenu open={props.isOrderMenuModalToggled} />
     </div>
@@ -53,7 +49,6 @@ export const Tables = props => {
 const mapStateToProps = state => ({
   tables: state.tables.tablesList,
   isOrderMenuModalToggled: state.orderMenu.isOrderMenuModalToggled,
-  newOrder: state.orderMenu.currentOrderHttp.success,
 })
 export default connect(
   mapStateToProps,

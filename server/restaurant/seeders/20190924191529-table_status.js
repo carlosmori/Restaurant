@@ -21,7 +21,7 @@ module.exports = {
           updatedAt: new Date()
         },
         {
-          description: "Ready to be closed",
+          description: "Closed",
           createdAt: new Date(),
           updatedAt: new Date()
         }

@@ -12,9 +12,9 @@ import Input from '@material-ui/core/Input'
 import Chip from '@material-ui/core/Chip'
 import ListItemText from '@material-ui/core/ListItemText'
 import {connect} from 'react-redux'
-import {toggleModal, takeOrder} from '../../../../state/ducks/order-menu/actions'
+import {toggleModal} from '../../../../state/ducks/order-menu/actions'
+import { takeOrder} from '../../../../state/ducks/orders/actions'
 import {makeStyles} from '@material-ui/core/styles'
-import {ORDER_STATUS_VALUE} from '../../../../utils/enums/orderStatusEnum'
 
 const useStyles = makeStyles(theme => ({
   modal: {

@@ -7,25 +7,25 @@ module.exports = {
       [
         {
           status: 1,
-          order_id: 2,
+          order_id: null,
           createdAt: new Date(),
           updatedAt: new Date()
         },
         {
           status: 1,
-          order_id: 3,
+          order_id: null,
           createdAt: new Date(),
           updatedAt: new Date()
         },
         {
           status: 1,
-          order_id: 4,
+          order_id: null,
           createdAt: new Date(),
           updatedAt: new Date()
         },
         {
           status: 1,
-          order_id: 5,
+          order_id: null,
           createdAt: new Date(),
           updatedAt: new Date()
         }
