@@ -17,7 +17,6 @@ import {axios} from '../../../utils/http/axios-singleton'
  */
 export function* testSaga() {
   try {
-    console.log('Enter TABLES testSaga')
     yield put({type: TABLES_TEST_ACTION_SUCCESS, payload: 'Test'})
   } catch (error) {
     yield put({type: TABLES_TEST_ACTION_FAILED, error})

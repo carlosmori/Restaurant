@@ -28,7 +28,7 @@ const Orders = props => {
               variant="contained"
               color="primary"
               onClick={() => deliverOrder(rowData)}
-              disabled={rowData.status != 2}
+              disabled={rowData.status != ORDER_STATUS_VALUE.READY_TO_DELIVER}
             >
               Deliver
             </Button>

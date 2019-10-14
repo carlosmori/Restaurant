@@ -31,10 +31,6 @@ export const Tables = props => {
   useEffect(() => {
     return () => {}
   }, [props.isOrderMenuModalToggled])
-  useEffect(() => {
-    console.log('enter tables')
-    return () => {}
-  }, [props.tables])
 
   const classes = useStyles()
   return (

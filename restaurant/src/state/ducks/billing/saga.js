@@ -14,7 +14,6 @@ import {
  */
 export function* testSaga() {
   try {
-    console.log('Enter BILLING testSaga Saga')
     yield put({type: BILLING_TEST_ACTION_SUCCESS, payload: 'Test'})
   } catch (error) {
     yield put({type: BILLING_TEST_ACTION_FAILED, error})

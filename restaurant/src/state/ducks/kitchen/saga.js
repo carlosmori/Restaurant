@@ -60,6 +60,7 @@ export function* dispatchOrder(action) {
     yield timeout(500)
     //@todo Dispatch order success should modify order reducer, to update the status and allow the user
     //to deliver the order to the table
+    debugger;
     yield put({
       type: DISPATCH_ORDER.SUCCESS,
       payload: response.data,

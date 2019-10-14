@@ -83,7 +83,7 @@ const Kitchen = props => {
     if (props.pendingOrders.length > 0) {
       const orderProducts = []
       props.pendingOrders.forEach(order => {
-        const {id, status} = order
+        const {id} = order
         return order.products.length > 0
           ? order.products.map(product =>
               orderProducts.push({
@@ -93,8 +93,7 @@ const Kitchen = props => {
                 productId: product.id,
               })
             )
-          : props.dispatchOrder({id, status: ORDER_STATUS_VALUE.READY_TO_DISPATCH})
-        // : props.dispatchOrder()
+          : props.dispatchOrder({id, status: ORDER_STATUS_VALUE.READY_TO_DELIVER})
       })
       setState({columns: [...state.columns], data: orderProducts})
     }

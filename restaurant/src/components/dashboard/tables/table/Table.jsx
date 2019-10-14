@@ -75,12 +75,6 @@ export const Table = props => {
     setAnchorEl(event.currentTarget)
   }
 
-  useEffect(() => {
-    console.log('enter table')
-    console.log(props.table)
-    // shouldDisplayTimer()
-    return () => {}
-  })
   const shouldDisplayTimer = () => {
     //@todo refactor status == 2 and if else
     //Display timer only if the deliverByDate is greater than the current date and the status is Clients Waiting

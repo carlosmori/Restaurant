@@ -17,7 +17,7 @@ module.exports = {
       const deliver_time = moment()
         .add(cook_time, "minutes")
         .format("YYYY-MM-DD HH:mm:ss");
-      const new_order = await order.create({
+      let new_order = await order.create({
         user_id,
         status: 1,
         amount,
@@ -38,13 +38,29 @@ module.exports = {
           dispatched: 0
         });
       }
-      let response = new_order.toJSON();
-      response = { ...response, tableId: table_id, tableStatus: 2 };
-      //Take DOB and create Age from it
-      // users = users.map(user => user.toJSON());
-      // users = users.map(user => {
-      //   return { ...user, age: getAge(user.date_of_birth) };
-      return res.status(201).send(response);
+      new_order = await order.findOne({
+        where: { id: new_order.id },
+        include: [
+          {
+            model: user,
+            as: "waiterWaitress",
+            attributes: {
+              exclude: [
+                "id",
+                "date_of_birth",
+                "role_id",
+                "email",
+                "cellphone",
+                "createdAt",
+                "updatedAt"
+              ]
+            }
+          }
+        ]
+      });
+      new_order = new_order.toJSON();
+      new_order = { ...new_order, tableId: table_id, tableStatus: 2 };
+      return res.status(201).send(new_order);
     } catch (error) {
       return res.status(500).json({ error: error.toString() });
     }
@@ -119,7 +135,7 @@ module.exports = {
       //@todo refactor order status enum
       const pending_orders = await order.findAll({
         where: {
-          status: { [Op.or]: [1, 2] }
+          status: { [Op.or]: [1, 2, 3] }
         },
         include: [
           {
@@ -136,7 +152,8 @@ module.exports = {
                 "updatedAt"
               ]
             }
-          }
+          },
+          { model: table }
         ]
       });
       return res.status(200).json(pending_orders);
@@ -156,6 +173,12 @@ module.exports = {
           where: { order_id: orderId, product_id: productId }
         }
       );
+      await order.update(
+        {
+          status: 2
+        },
+        { where: { id: orderId } }
+      );
       const current_order = await order.findOne({
         where: { id: orderId },
         include: [
@@ -168,6 +191,7 @@ module.exports = {
           }
         ]
       });
+
       const response = current_order;
       return res.status(201).json(response);
     } catch (error) {

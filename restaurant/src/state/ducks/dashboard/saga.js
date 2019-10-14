@@ -14,7 +14,6 @@ import {
  */
 export function* testSaga() {
   try {
-    console.log('Enter DASHBOARD testSaga')
     yield put({type: DASHBOARD_TEST_ACTION_SUCCESS, payload: 'Test'})
   } catch (error) {
     yield put({type: DASHBOARD_TEST_ACTION_FAILED, error})
