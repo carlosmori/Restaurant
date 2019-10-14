@@ -21,7 +21,6 @@ import Billing from './billing/Billing'
 import Reports from './reports/Reports'
 import Users from './users/Users'
 import {connect} from 'react-redux'
-import {tablesTestAction} from '../../state/ducks/tables/actions'
 import InformativeDialog from '../dialogs/informative-dialog'
 import LoadingDialog from '../dialogs/loading-dialog copy'
 
@@ -29,7 +28,11 @@ function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
-      <Link color="inherit" href="https://www.linkedin.com/in/carlos-agustin-mori-765116128/" target="_blank">
+      <Link
+        color="inherit"
+        href="https://www.linkedin.com/in/carlos-agustin-mori-765116128/"
+        target="_blank"
+      >
         Carlos Agustin Mori
       </Link>{' '}
       {new Date().getFullYear()}
@@ -215,7 +218,5 @@ const mapStateToProps = state => ({
 })
 export default connect(
   mapStateToProps,
-  {
-    tablesTestAction,
-  }
+  {}
 )(Dashboard)

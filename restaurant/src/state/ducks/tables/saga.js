@@ -1,27 +1,7 @@
-/**
- * @module Sagas/Session
- * @desc Session
- */
 import {all, call, put, takeLatest} from 'redux-saga/effects'
-import {
-  TABLES_TEST_ACTION,
-  TABLES_TEST_ACTION_FAILED,
-  TABLES_TEST_ACTION_SUCCESS,
-  FETCH_TABLE,
-  FETCH_ORDER_MENU,
-} from './types'
+import {FETCH_TABLE, FETCH_ORDER_MENU} from './types'
 import {axios} from '../../../utils/http/axios-singleton'
 
-/**
- * Login
- */
-export function* testSaga() {
-  try {
-    yield put({type: TABLES_TEST_ACTION_SUCCESS, payload: 'Test'})
-  } catch (error) {
-    yield put({type: TABLES_TEST_ACTION_FAILED, error})
-  }
-}
 export function* fetchTables() {
   try {
     const response = yield call(fetchTableHttpCall)
@@ -52,7 +32,6 @@ const fecthOrderMenuHttpCall = () => axios.get(`/products`)
  */
 export default function* root() {
   yield all([
-    takeLatest(TABLES_TEST_ACTION, testSaga),
     takeLatest(FETCH_TABLE.REQUEST, fetchTables),
     takeLatest(FETCH_ORDER_MENU.REQUEST, fetchOrderMenu),
   ])
