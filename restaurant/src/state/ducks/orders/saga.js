@@ -30,13 +30,10 @@ export function* deliverOrder(action) {
     yield put({type: DASHBOARD_LOADING, payload: {loading: true}})
     const response = yield call(deliverOrderHttpCall, action.payload)
     yield timeout(500)
-    //@todo Dispatch order success should modify order reducer, to update the status and allow the user
-    //to deliver the order to the table
     yield put({
       type: DELIVER_ORDER.SUCCESS,
       payload: response.data,
     })
-    // const response = yield call(deliverOrderHttpCall, action.payload)
 
     yield put({type: DASHBOARD_LOADING, payload: {loading: false}})
     yield put({
@@ -88,7 +85,7 @@ export function* takeOrder(action) {
   }
 }
 const fetchOrdersHttpCall = () => axios.get(`/orders/pendingOrders`)
-const deliverOrderHttpCall = payload => axios.put('/orders', {...payload})
+const deliverOrderHttpCall = payload => axios.post('orders/deliverOrder', {...payload})
 const takeOrderHttpCall = order => axios.post('/orders', {...order})
 
 export default function* root() {

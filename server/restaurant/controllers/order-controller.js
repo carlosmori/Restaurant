@@ -21,7 +21,8 @@ module.exports = {
         user_id,
         status: 1,
         amount,
-        deliver_time
+        deliver_time,
+        table_id
       });
       //@todo refactor hardcoded status for a proper enum
       const tableUpdated = await table.update(
@@ -152,8 +153,7 @@ module.exports = {
                 "updatedAt"
               ]
             }
-          },
-          { model: table }
+          }
         ]
       });
       return res.status(200).json(pending_orders);
@@ -193,6 +193,31 @@ module.exports = {
       });
 
       const response = current_order;
+      return res.status(201).json(response);
+    } catch (error) {
+      return res.status(500).json({ error: error.toString() });
+    }
+  },
+  //Deliver Order
+  async deliverOrder(req, res) {
+    try {
+      const { id, table_id } = req.body;
+      await order.update(
+        {
+          status: 5
+        },
+        { where: { id } }
+      );
+      await table.update(
+        {
+          status: 3
+        },
+        { where: { id: table_id } }
+      );
+      const updated_order = await order.findOne({
+        where: { id }
+      });
+      const response = updated_order;
       return res.status(201).json(response);
     } catch (error) {
       return res.status(500).json({ error: error.toString() });

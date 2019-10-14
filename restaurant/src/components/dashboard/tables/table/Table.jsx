@@ -9,10 +9,14 @@ import {connect} from 'react-redux'
 import {toggleModal} from '../../../../state/ducks/order-menu/actions'
 import Menu from '@material-ui/core/Menu'
 import MenuItem from '@material-ui/core/MenuItem'
-import {TABLE_STATUS_KEY} from '../../../../utils/enums/tableStatusEnum'
+import {
+  TABLE_STATUS_KEY,
+  TABLE_STATUS_VALUE,
+} from '../../../../utils/enums/tableStatusEnum'
 import Timer from '../../../timer/Timer'
 import moment from 'moment'
-
+import {ORDER_STATUS_VALUE} from '../../../../utils/enums/orderStatusEnum'
+import {deliverOrder} from '../../../../state/ducks/orders/actions'
 const useStyles = makeStyles(theme => ({
   paper: {
     display: 'flex',
@@ -63,12 +67,23 @@ export const Table = props => {
   const [status, setStatus] = React.useState('Available')
   const classes = useStyles()
 
-  const takeOrder = () => {
+  const openOrderMenu = () => {
     setAnchorEl(null)
     props.toggleModal({isOrderMenuModalToggled: true, tableId: props.table.id})
   }
-  const serveOrder = () => {
-    setStatus('Clients Eating')
+
+  const deliverOrder = order => {
+    const id = props.table.currentOrder.id
+    const table_id = props.table.id
+    props.deliverOrder({
+      id,
+      status: ORDER_STATUS_VALUE.DELIVERED,
+      table_id,
+    })
+    setAnchorEl(null)
+  }
+  const closeTable = () => {
+    setStatus('Close Table')
     setAnchorEl(null)
   }
   const handleTableActionsClick = event => {
@@ -113,19 +128,19 @@ export const Table = props => {
               keepMounted
               open={Boolean(anchorEl)}
             >
-              {props.table.status === 1 ? (
-                <MenuItem onClick={takeOrder}>Take Order</MenuItem>
+              {props.table.status === TABLE_STATUS_VALUE.FREE ? (
+                <MenuItem onClick={openOrderMenu}>Take Order</MenuItem>
               ) : null}
-              {props.table.status === 2 ? (
+              {props.table.status === TABLE_STATUS_VALUE.CLIENTS_WAITING ? (
                 <div>
-                  <MenuItem onClick={serveOrder}>Deliver Order</MenuItem>
-                  <MenuItem onClick={serveOrder} disabled={true}>
+                  <MenuItem onClick={deliverOrder}>Deliver Order</MenuItem>
+                  <MenuItem onClick={() => {}} disabled={true}>
                     Cancel Order
                   </MenuItem>
                 </div>
               ) : null}
-              {status === 'Clients Eating' ? (
-                <MenuItem onClick={serveOrder}>Close Table</MenuItem>
+              {props.table.status === TABLE_STATUS_VALUE.CLIENTS_EATING ? (
+                <MenuItem onClick={() => {}}>Close Table</MenuItem>
               ) : null}
             </Menu>
           </div>
@@ -139,5 +154,6 @@ export default connect(
   mapStateToProps,
   {
     toggleModal,
+    deliverOrder,
   }
 )(Table)

@@ -12,11 +12,9 @@ export default (state = initialState, {type, payload}) => {
         orderList: [...payload.success],
       }
     case DELIVER_ORDER.SUCCESS:
-      const deliveredOrder = payload
-      const newOrderList = state.orderList.filter(order => order.id !== deliveredOrder.id)
       return {
         ...state,
-        orderList: [...newOrderList],
+        orderList: [...state.orderList].filter(order => order.id !== payload.id),
       }
     case TAKE_ORDER.SUCCESS:
       return {

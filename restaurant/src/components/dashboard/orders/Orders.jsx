@@ -7,11 +7,17 @@ import {ORDER_STATUS_KEY, ORDER_STATUS_VALUE} from '../../../utils/enums/orderSt
 const Orders = props => {
   //@todo strong type column and field names
   const deliverOrder = order => {
-    props.deliverOrder({id: order.id, status: ORDER_STATUS_VALUE.DELIVERED})
+    const {id, table_id} = order
+    props.deliverOrder({
+      id,
+      status: ORDER_STATUS_VALUE.DELIVERED,
+      table_id,
+    })
   }
   const [state, setState] = React.useState({
     columns: [
       {title: 'Order #', field: 'id', type: 'numeric'},
+      {title: 'Table #', field: 'table_id'},
       {title: 'Waiter/Waitress', field: 'waiterWaitressName'},
       {title: 'Detail', field: 'deliver_time'},
       {title: 'Total Amount', field: 'amount'},
@@ -44,17 +50,20 @@ const Orders = props => {
   React.useEffect(() => {
     if (props.orderList.length) {
       const orderListFormatted = props.orderList.map(order => {
-        const {id, deliver_time, amount, status, waiterWaitress} = order
+        const {id, deliver_time, amount, status, waiterWaitress, table_id} = order
         const waiterWaitressName = `${waiterWaitress.name}  ${waiterWaitress.last_name}`
         return {
           id,
           waiterWaitressName,
           deliver_time,
+          table_id,
           amount,
           status,
         }
       })
       setState({columns: [...state.columns], data: [...orderListFormatted]})
+    } else {
+      setState({columns: [...state.columns], data: []})
     }
   }, [props.orderList])
 
