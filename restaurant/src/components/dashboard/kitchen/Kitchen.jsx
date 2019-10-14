@@ -9,7 +9,7 @@ import {
 } from '../../../state/ducks/kitchen/actions'
 import Button from '@material-ui/core/Button'
 import Modal from '@material-ui/core/Modal'
-import {ORDER_STATUS_KEY, ORDER_STATUS_VALUE} from '../../../utils/enums/orderStatusEnum'
+import {ORDER_STATUS_VALUE} from '../../../utils/enums/orderStatusEnum'
 
 const getModalStyle = () => {
   const top = 50
@@ -30,7 +30,11 @@ const useStyles = makeStyles(theme => ({
     padding: theme.spacing(2, 4, 3),
   },
 }))
-const Kitchen = props => {
+const Kitchen = ({dispatchProduct, fetchPendingDishes, pendingOrders, dispatchOrder}) => {
+  const [open, setOpen] = React.useState(false)
+  const [rowData, setRowData] = React.useState({})
+  const [modalStyle] = React.useState(getModalStyle)
+  const classes = useStyles()
   const [state, setState] = React.useState({
     columns: [
       {title: 'Order #', field: 'orderId', type: 'numeric'},
@@ -59,15 +63,9 @@ const Kitchen = props => {
     ],
     data: [],
   })
-  const [open, setOpen] = React.useState(false)
-  const [rowData, setRowData] = React.useState({})
-  const [modalStyle] = React.useState(getModalStyle)
-
-  const classes = useStyles()
-
-  const dispatchProduct = rowData => {
+  const dispatchProductAction = rowData => {
     const {orderId, productId} = rowData
-    props.dispatchProduct({orderId, productId})
+    dispatchProduct({orderId, productId})
     toggleModal(false)
     setRowData({})
   }
@@ -77,12 +75,12 @@ const Kitchen = props => {
   }
 
   React.useEffect(() => {
-    props.fetchPendingDishes()
-  }, [props.fetchPendingDishes])
+    fetchPendingDishes()
+  }, [fetchPendingDishes])
   React.useEffect(() => {
-    if (props.pendingOrders.length > 0) {
+    if (pendingOrders.length > 0) {
       const orderProducts = []
-      props.pendingOrders.forEach(order => {
+      pendingOrders.forEach(order => {
         const {id} = order
         return order.products.length > 0
           ? order.products.map(product =>
@@ -93,11 +91,11 @@ const Kitchen = props => {
                 productId: product.id,
               })
             )
-          : props.dispatchOrder({id, status: ORDER_STATUS_VALUE.READY_TO_DELIVER})
+          : dispatchOrder({id, status: ORDER_STATUS_VALUE.READY_TO_DELIVER})
       })
       setState({columns: [...state.columns], data: orderProducts})
     }
-  }, [props.pendingOrders])
+  }, [pendingOrders, dispatchOrder, state])
 
   return (
     <div>
@@ -121,7 +119,7 @@ const Kitchen = props => {
             <Button
               variant="contained"
               color="primary"
-              onClick={() => dispatchProduct(rowData)}
+              onClick={() => dispatchProductAction(rowData)}
             >
               Dispatch
             </Button>

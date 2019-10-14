@@ -19,26 +19,25 @@ const useStyles = makeStyles(theme => ({
     height: '100%',
   },
 }))
-export const Tables = props => {
+export const Tables = ({fetchTables, fetchOrderMenu, isOrderMenuModalToggled, tables}) => {
   useEffect(() => {
-    props.fetchTables()
+    fetchTables()
     return () => {}
-  }, [props.fetchTables])
+  }, [fetchTables])
   useEffect(() => {
-    props.fetchOrderMenu()
+    fetchOrderMenu()
     return () => {}
-  }, [props.fetchOrderMenu])
-  useEffect(() => {
-    return () => {}
-  }, [props.isOrderMenuModalToggled])
+  }, [fetchOrderMenu])
 
   const classes = useStyles()
   return (
     <div className={classes.root}>
       <Grid container spacing={3} className={classes.gridContainer}>
-        {props.tables.map((value, index) => <Table table={value} index={index} key={value.id} />)}
+        {tables.map((value, index) => (
+          <Table table={value} index={index} key={value.id} />
+        ))}
       </Grid>
-      <OrderMenu open={props.isOrderMenuModalToggled} />
+      <OrderMenu open={isOrderMenuModalToggled} />
     </div>
   )
 }

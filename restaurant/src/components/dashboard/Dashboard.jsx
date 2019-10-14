@@ -22,7 +22,7 @@ import Reports from './reports/Reports'
 import Users from './users/Users'
 import {connect} from 'react-redux'
 import InformativeDialog from '../dialogs/informative-dialog'
-import LoadingDialog from '../dialogs/loading-dialog copy'
+import LoadingDialog from '../dialogs/loading-dialog'
 
 function Copyright() {
   return (

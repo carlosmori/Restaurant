@@ -4,11 +4,11 @@ import {connect} from 'react-redux'
 import Button from '@material-ui/core/Button'
 import {fetchOrders, deliverOrder} from '../../../state/ducks/orders/actions'
 import {ORDER_STATUS_KEY, ORDER_STATUS_VALUE} from '../../../utils/enums/orderStatusEnum'
-const Orders = props => {
+const Orders = ({fetchOrders, orderList, deliverOrder}) => {
   //@todo strong type column and field names
-  const deliverOrder = order => {
+  const deliverOrderAction = order => {
     const {id, table_id} = order
-    props.deliverOrder({
+    deliverOrder({
       id,
       status: ORDER_STATUS_VALUE.DELIVERED,
       table_id,
@@ -33,8 +33,8 @@ const Orders = props => {
             <Button
               variant="contained"
               color="primary"
-              onClick={() => deliverOrder(rowData)}
-              disabled={rowData.status != ORDER_STATUS_VALUE.READY_TO_DELIVER}
+              onClick={() => deliverOrderAction(rowData)}
+              disabled={rowData.status !== ORDER_STATUS_VALUE.READY_TO_DELIVER}
             >
               Deliver
             </Button>
@@ -45,11 +45,11 @@ const Orders = props => {
     data: [],
   })
   React.useEffect(() => {
-    props.fetchOrders()
-  }, [props.fetchOrders])
+    fetchOrders()
+  }, [fetchOrders])
   React.useEffect(() => {
-    if (props.orderList.length) {
-      const orderListFormatted = props.orderList.map(order => {
+    if (orderList.length) {
+      const orderListFormatted = orderList.map(order => {
         const {id, deliver_time, amount, status, waiterWaitress, table_id} = order
         const waiterWaitressName = `${waiterWaitress.name}  ${waiterWaitress.last_name}`
         return {
@@ -65,7 +65,7 @@ const Orders = props => {
     } else {
       setState({columns: [...state.columns], data: []})
     }
-  }, [props.orderList])
+  }, [orderList, state])
 
   return (
     <MaterialTable title="Pending Orders" columns={state.columns} data={state.data} />

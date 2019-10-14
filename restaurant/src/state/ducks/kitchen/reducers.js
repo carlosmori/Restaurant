@@ -16,7 +16,7 @@ export default (state = initialState, {type, payload}) => {
       let newPendingOrders = state.pendingOrders
       const orderIndex = newPendingOrders.findIndex(order => order.id === orderId)
       const filteredProductsArray = newPendingOrders[orderIndex].products.filter(
-        product => product.id != productId
+        product => product.id !== productId
       )
       newPendingOrders[orderIndex].products = filteredProductsArray
       return {

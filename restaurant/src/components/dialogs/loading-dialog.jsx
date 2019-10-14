@@ -20,7 +20,7 @@ const useStyles = makeStyles(theme => ({
 const LoadingDialog = props => {
   const handleClose = () => {}
   const classes = useStyles()
-  const [open, setOpen] = React.useState(true)
+  const [open] = React.useState(true)
   const [progress, setProgress] = React.useState(100)
 
   React.useEffect(() => {

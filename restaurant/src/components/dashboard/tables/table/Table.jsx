@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react'
+import React from 'react'
 import Grid from '@material-ui/core/Grid'
 import {makeStyles} from '@material-ui/core/styles'
 import Paper from '@material-ui/core/Paper'
@@ -62,28 +62,23 @@ const useStyles = makeStyles(theme => ({
     textShadow: '-2px 10px 10px rgba(0, 0, 0, 0.87)',
   },
 }))
-export const Table = props => {
+export const Table = ({toggleModal, table, deliverOrder,index}) => {
   const [anchorEl, setAnchorEl] = React.useState(null)
-  const [status, setStatus] = React.useState('Available')
   const classes = useStyles()
 
   const openOrderMenu = () => {
     setAnchorEl(null)
-    props.toggleModal({isOrderMenuModalToggled: true, tableId: props.table.id})
+    toggleModal({isOrderMenuModalToggled: true, tableId: table.id})
   }
 
-  const deliverOrder = order => {
-    const id = props.table.currentOrder.id
-    const table_id = props.table.id
-    props.deliverOrder({
+  const deliverOrderAction = order => {
+    const id = table.currentOrder.id
+    const table_id = table.id
+    deliverOrder({
       id,
       status: ORDER_STATUS_VALUE.DELIVERED,
       table_id,
     })
-    setAnchorEl(null)
-  }
-  const closeTable = () => {
-    setStatus('Close Table')
     setAnchorEl(null)
   }
   const handleTableActionsClick = event => {
@@ -91,27 +86,25 @@ export const Table = props => {
   }
 
   const shouldDisplayTimer = () => {
-    //@todo refactor status == 2 and if else
-    //Display timer only if the deliverByDate is greater than the current date and the status is Clients Waiting
-    if (props.table.currentOrder) {
-      const then = moment(new Date(props.table.currentOrder.deliver_time)).valueOf()
+    if (table.currentOrder) {
+      const then = moment(new Date(table.currentOrder.deliver_time)).valueOf()
       const now = moment().valueOf()
       const futureDeliverBy = then - now > 0
-      return props.table.status === 2 && futureDeliverBy
+      return table.status === TABLE_STATUS_VALUE.CLIENTS_WAITING && futureDeliverBy
     } else {
       return false
     }
   }
   return (
     <React.Fragment>
-      <Grid item xs={12} sm={6} className={classes.gridBlock} key={props.index}>
+      <Grid item xs={12} sm={6} className={classes.gridBlock} key={index}>
         <div className={classes.subtitleContainer}>
-          <p className={classes.subtitle}>Table #{props.table.id}</p>
+          <p className={classes.subtitle}>Table #{table.id}</p>
         </div>
         <Paper className={classes.paper}>
-          <div className={classes.status}>{TABLE_STATUS_KEY[props.table.status]}</div>
+          <div className={classes.status}>{TABLE_STATUS_KEY[table.status]}</div>
           {shouldDisplayTimer() ? (
-            <Timer deliverBy={props.table.currentOrder.deliver_time} />
+            <Timer deliverBy={table.currentOrder.deliver_time} />
           ) : null}
           <div className={classes.fabContainer}>
             <Fab
@@ -128,18 +121,18 @@ export const Table = props => {
               keepMounted
               open={Boolean(anchorEl)}
             >
-              {props.table.status === TABLE_STATUS_VALUE.FREE ? (
+              {table.status === TABLE_STATUS_VALUE.FREE ? (
                 <MenuItem onClick={openOrderMenu}>Take Order</MenuItem>
               ) : null}
-              {props.table.status === TABLE_STATUS_VALUE.CLIENTS_WAITING ? (
+              {table.status === TABLE_STATUS_VALUE.CLIENTS_WAITING ? (
                 <div>
-                  <MenuItem onClick={deliverOrder}>Deliver Order</MenuItem>
+                  <MenuItem onClick={deliverOrderAction}>Deliver Order</MenuItem>
                   <MenuItem onClick={() => {}} disabled={true}>
                     Cancel Order
                   </MenuItem>
                 </div>
               ) : null}
-              {props.table.status === TABLE_STATUS_VALUE.CLIENTS_EATING ? (
+              {table.status === TABLE_STATUS_VALUE.CLIENTS_EATING ? (
                 <MenuItem onClick={() => {}}>Close Table</MenuItem>
               ) : null}
             </Menu>

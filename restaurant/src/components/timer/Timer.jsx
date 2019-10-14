@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from 'react'
+import React from 'react'
 import {makeStyles} from '@material-ui/core/styles'
 import moment from 'moment'
 import CircularProgress from '@material-ui/core/CircularProgress'
@@ -22,7 +22,6 @@ const Timer = props => {
   const classes = useStyles()
   const [minutes, setMinutes] = React.useState(undefined)
   const [seconds, setSeconds] = React.useState(undefined)
-  const [timer, setTimer] = React.useState(false)
   let id
 
   React.useEffect(() => {
@@ -32,7 +31,7 @@ const Timer = props => {
       const duration = moment.duration(then - updatedNow, 'milliseconds')
       const minutes = duration.minutes()
       const seconds = duration.seconds()
-      if (minutes == 0 && seconds == 0) {
+      if (minutes === 0 && seconds === 0) {
         clearInterval(id)
       }
       setMinutes(minutes)

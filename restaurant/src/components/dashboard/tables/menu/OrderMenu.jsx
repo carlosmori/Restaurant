@@ -13,7 +13,7 @@ import Chip from '@material-ui/core/Chip'
 import ListItemText from '@material-ui/core/ListItemText'
 import {connect} from 'react-redux'
 import {toggleModal} from '../../../../state/ducks/order-menu/actions'
-import { takeOrder} from '../../../../state/ducks/orders/actions'
+import { takeOrder} from '../../../../state/ducks/tables/actions'
 import {makeStyles} from '@material-ui/core/styles'
 
 const useStyles = makeStyles(theme => ({

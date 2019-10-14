@@ -1,10 +1,8 @@
 import {all, put, call, takeLatest} from 'redux-saga/effects'
 import {axios} from '../../../utils/http/axios-singleton'
 
-import {FETCH_ORDERS, DELIVER_ORDER, TAKE_ORDER} from './types'
+import {FETCH_ORDERS, DELIVER_ORDER} from './types'
 import {DASHBOARD_LOADING, DASHBOARD_SNACKBAR} from '../dashboard/types'
-import {UPDATE_TABLE} from '../tables/types'
-import {TABLE_STATUS, TABLE_STATUS_VALUE} from '../../../utils/enums/tableStatusEnum'
 
 export function* fetchOrders() {
   try {
@@ -54,45 +52,13 @@ export function* deliverOrder(action) {
   }
 }
 
-export function* takeOrder(action) {
-  try {
-    yield put({type: DASHBOARD_LOADING, payload: {loading: true}})
-    const response = yield call(takeOrderHttpCall, action.payload)
-    yield timeout(3000)
-    yield put({
-      type: TAKE_ORDER.SUCCESS,
-      payload: response.data,
-    })
-    yield put({
-      type: UPDATE_TABLE,
-      payload: {
-        currentOrder: response.data,
-        tableStatus: TABLE_STATUS_VALUE.CLIENTS_WAITING,
-      },
-    })
-    yield put({type: DASHBOARD_LOADING, payload: {loading: false}})
-    yield put({
-      type: DASHBOARD_SNACKBAR,
-      payload: {show: true, message: 'Order dispatched successfully', variant: 'success'},
-    })
-  } catch (error) {
-    yield put({type: TAKE_ORDER.FAILED, payload: {error}})
-    yield put({type: DASHBOARD_LOADING, payload: {loading: false}})
-    yield put({
-      type: DASHBOARD_SNACKBAR,
-      payload: {show: true, message: 'An error has occurred', variant: 'warning'},
-    })
-  }
-}
 const fetchOrdersHttpCall = () => axios.get(`/orders/pendingOrders`)
 const deliverOrderHttpCall = payload => axios.post('orders/deliverOrder', {...payload})
-const takeOrderHttpCall = order => axios.post('/orders', {...order})
 
 export default function* root() {
   yield all([
     takeLatest(FETCH_ORDERS.REQUEST, fetchOrders),
     takeLatest(DELIVER_ORDER.REQUEST, deliverOrder),
-    takeLatest(TAKE_ORDER.REQUEST, takeOrder),
   ])
 }
 

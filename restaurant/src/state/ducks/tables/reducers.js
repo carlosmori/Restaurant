@@ -1,10 +1,11 @@
-import {FETCH_TABLE, FETCH_ORDER_MENU, UPDATE_TABLE} from './types'
+import {FETCH_TABLE, FETCH_ORDER_MENU, UPDATE_TABLE, TAKE_ORDER} from './types'
 const initialState = {
   tablesList: [],
   productsList: [],
 }
 
 export default (state = initialState, {type, payload}) => {
+  let currentOrder, newTableList, tableStatus, tableIndex, updatedTable
   switch (type) {
     case FETCH_TABLE.SUCCESS:
       return {
@@ -17,18 +18,28 @@ export default (state = initialState, {type, payload}) => {
         productsList: payload.products,
       }
     case UPDATE_TABLE:
-      const {currentOrder, tableStatus} = payload
-      let newTablesList = [...state.tablesList]
-      const tableIndex = newTablesList.findIndex(
-        table => table.id === currentOrder.tableId
-      )
-      let updatedTable = {...newTablesList[tableIndex]}
+      currentOrder = payload.currentOrder
+      tableStatus = payload.tableStatus
+      const newTablesList = [...state.tablesList]
+      tableIndex = newTablesList.findIndex(table => table.id === currentOrder.tableId)
+      updatedTable = {...newTablesList[tableIndex]}
       updatedTable.status = tableStatus
       updatedTable.currentOrder = currentOrder
       newTablesList[tableIndex] = updatedTable
       return {
         ...state,
         tablesList: [...newTablesList],
+      }
+    case TAKE_ORDER.SUCCESS:
+      currentOrder = payload
+      const newTableList = [...state.tablesList]
+      tableIndex = newTableList.findIndex(table => table.id === currentOrder.tableId)
+      updatedTable = {...newTableList[tableIndex]}
+      updatedTable.currentOrder = currentOrder
+      newTableList[tableIndex] = updatedTable
+      return {
+        ...state,
+        tablesList: [...newTableList],
       }
     default:
       return state
