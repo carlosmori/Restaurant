@@ -95,7 +95,7 @@ const Kitchen = ({dispatchProduct, fetchPendingDishes, pendingOrders, dispatchOr
       })
       setState({columns: [...state.columns], data: orderProducts})
     }
-  }, [pendingOrders, dispatchOrder, state])
+  }, [pendingOrders])
 
   return (
     <div>

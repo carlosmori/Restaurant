@@ -15,7 +15,7 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       status: {
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER
       },
       amount: {
         type: Sequelize.FLOAT

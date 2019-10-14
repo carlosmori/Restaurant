@@ -62,7 +62,7 @@ const useStyles = makeStyles(theme => ({
     textShadow: '-2px 10px 10px rgba(0, 0, 0, 0.87)',
   },
 }))
-export const Table = ({toggleModal, table, deliverOrder,index}) => {
+export const Table = ({toggleModal, table, deliverOrder, index}) => {
   const [anchorEl, setAnchorEl] = React.useState(null)
   const classes = useStyles()
 
@@ -95,6 +95,11 @@ export const Table = ({toggleModal, table, deliverOrder,index}) => {
       return false
     }
   }
+
+  const handleClose = () => {
+    setAnchorEl(null)
+  }
+
   return (
     <React.Fragment>
       <Grid item xs={12} sm={6} className={classes.gridBlock} key={index}>
@@ -120,13 +125,21 @@ export const Table = ({toggleModal, table, deliverOrder,index}) => {
               anchorEl={anchorEl}
               keepMounted
               open={Boolean(anchorEl)}
+              onClose={handleClose}
             >
               {table.status === TABLE_STATUS_VALUE.FREE ? (
                 <MenuItem onClick={openOrderMenu}>Take Order</MenuItem>
               ) : null}
               {table.status === TABLE_STATUS_VALUE.CLIENTS_WAITING ? (
                 <div>
-                  <MenuItem onClick={deliverOrderAction}>Deliver Order</MenuItem>
+                  <MenuItem
+                    disabled={
+                      table.currentOrder.status !== ORDER_STATUS_VALUE.READY_TO_DELIVER
+                    }
+                    onClick={deliverOrderAction}
+                  >
+                    Deliver Order
+                  </MenuItem>
                   <MenuItem onClick={() => {}} disabled={true}>
                     Cancel Order
                   </MenuItem>
