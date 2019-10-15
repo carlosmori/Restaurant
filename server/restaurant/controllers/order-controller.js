@@ -36,7 +36,8 @@ module.exports = {
         await orderProduct.create({
           order_id: new_order.id,
           product_id: id,
-          dispatched: 0
+          dispatched: 0,
+          cancelled: 0
         });
       }
       new_order = await order.findOne({
@@ -120,7 +121,7 @@ module.exports = {
               where: {
                 dispatched: 0
               },
-              attributes: []
+              attributes: ["dispatched", "cancelled"]
             }
           }
         ]
@@ -179,20 +180,50 @@ module.exports = {
         },
         { where: { id: orderId } }
       );
-      const current_order = await order.findOne({
+      const orders = await order.findOne({
         where: { id: orderId },
         include: [
           {
             model: product,
-            where: {
-              id: productId
-            },
-            through: { attributes: [] }
+            through: { attributes: ["dispatched", "cancelled"] }
           }
         ]
       });
 
-      const response = current_order;
+      const response = orders;
+      return res.status(201).json(response);
+    } catch (error) {
+      return res.status(500).json({ error: error.toString() });
+    }
+  },
+  //Cancel Product
+  async cancelProduct(req, res) {
+    try {
+      const { orderId, productId } = req.body;
+      const orderProductIndex = await orderProduct.update(
+        {
+          cancelled: 1
+        },
+        {
+          where: { order_id: orderId, product_id: productId }
+        }
+      );
+      await order.update(
+        {
+          status: 2
+        },
+        { where: { id: orderId } }
+      );
+      const orders = await order.findOne({
+        where: { id: orderId },
+        include: [
+          {
+            model: product,
+            through: { attributes: ["dispatched", "cancelled"] }
+          }
+        ]
+      });
+      const response = orders;
       return res.status(201).json(response);
     } catch (error) {
       return res.status(500).json({ error: error.toString() });
@@ -228,7 +259,9 @@ module.exports = {
     try {
       const { orderId, tableId } = req.body;
       await order.update({ status: 5 }, { where: { id: orderId } });
-      await orderProduct.destroy({ where: { order_id: orderId, dispatched: 0 } });
+      await orderProduct.destroy({
+        where: { order_id: orderId, dispatched: 0 }
+      });
       await table.update(
         { status: 1, order_id: null },
         { where: { id: tableId } }

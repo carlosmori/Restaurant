@@ -1,6 +1,6 @@
 import {DASHBOARD_LOADING, DASHBOARD_SNACKBAR} from './types'
 const initialState = {
-  informativeDialog: {show: false, message: '', variant: ''},
+  snackbar: {show: false, message: '', variant: ''},
   displayLoadingDialog: false,
 }
 
@@ -10,8 +10,8 @@ export default (state = initialState, {type, payload}) => {
       const {show, message, variant} = payload
       return {
         ...state,
-        informativeDialog: {
-          ...state.informativeDialog,
+        snackbar: {
+          ...state.snackbar,
           show,
           message,
           variant,

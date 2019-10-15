@@ -6,7 +6,7 @@ import InfoIcon from '@material-ui/icons/Info'
 import CloseIcon from '@material-ui/icons/Close'
 import {amber, green} from '@material-ui/core/colors'
 import IconButton from '@material-ui/core/IconButton'
-import Snackbar from '@material-ui/core/Snackbar'
+import {Snackbar as Snack} from '@material-ui/core/'
 import SnackbarContent from '@material-ui/core/SnackbarContent'
 import WarningIcon from '@material-ui/icons/Warning'
 import clsx from 'clsx'
@@ -44,7 +44,7 @@ const useStyles1 = makeStyles(theme => ({
   },
 }))
 
-const InformativeDialog = props => {
+const Snackbar = props => {
   const [state, setState] = React.useState({
     open: true,
     vertical: 'bottom',
@@ -59,7 +59,7 @@ const InformativeDialog = props => {
 
   return (
     <div>
-      <Snackbar
+      <Snack
         anchorOrigin={{vertical, horizontal}}
         key={`${vertical},${horizontal}`}
         open={open}
@@ -69,12 +69,8 @@ const InformativeDialog = props => {
         }}
         message={<span id="message-id">{props.message}</span>}
       >
-        <MySnackbarContentWrapper
-          onClose={handleClose}
-          variant={props.variant}
-          message={props.message}
-        />
-      </Snackbar>
+        <MySnackbarContentWrapper onClose={handleClose} variant={props.variant} message={props.message} />
+      </Snack>
     </div>
   )
 }
@@ -102,4 +98,4 @@ function MySnackbarContentWrapper(props) {
     />
   )
 }
-export default InformativeDialog
+export default Snackbar

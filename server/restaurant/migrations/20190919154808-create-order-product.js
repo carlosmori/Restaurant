@@ -17,6 +17,9 @@ module.exports = {
       dispatched: {
         type: Sequelize.BOOLEAN
       },
+      cancelled: {
+        type: Sequelize.BOOLEAN
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

@@ -2,11 +2,8 @@ import React from 'react'
 import MaterialTable from 'material-table'
 import {connect} from 'react-redux'
 import {makeStyles} from '@material-ui/core/styles'
-import {
-  fetchPendingDishes,
-  dispatchProduct,
-  dispatchOrder,
-} from '../../../state/ducks/kitchen/actions'
+import {fetchPendingDishes, dispatchProduct, dispatchOrder, cancelProduct} from '../../../state/ducks/kitchen/actions'
+import {cancelOrder} from '../../../state/ducks/tables/actions'
 import Button from '@material-ui/core/Button'
 import Modal from '@material-ui/core/Modal'
 import {ORDER_STATUS_VALUE} from '../../../utils/enums/orderStatusEnum'
@@ -30,9 +27,11 @@ const useStyles = makeStyles(theme => ({
     padding: theme.spacing(2, 4, 3),
   },
 }))
-const Kitchen = ({dispatchProduct, fetchPendingDishes, pendingOrders, dispatchOrder}) => {
+const Kitchen = ({dispatchProduct, fetchPendingDishes, pendingOrders, dispatchOrder, cancelProduct, cancelOrder}) => {
   const [open, setOpen] = React.useState(false)
   const [rowData, setRowData] = React.useState({})
+  const [message, setMessage] = React.useState('')
+  const [action, setAction] = React.useState(null)
   const [modalStyle] = React.useState(getModalStyle)
   const classes = useStyles()
   const [state, setState] = React.useState({
@@ -43,18 +42,10 @@ const Kitchen = ({dispatchProduct, fetchPendingDishes, pendingOrders, dispatchOr
       {
         render: rowData => (
           <div>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => toggleModal(true, rowData)}
-            >
+            <Button variant="contained" color="primary" onClick={() => kitchenActions(rowData, 'Dispatch')}>
               Dispatch
             </Button>
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={() => toggleModal(false)}
-            >
+            <Button variant="contained" color="secondary" onClick={() => kitchenActions(rowData, 'Cancel')}>
               Cancel
             </Button>
           </div>
@@ -63,17 +54,54 @@ const Kitchen = ({dispatchProduct, fetchPendingDishes, pendingOrders, dispatchOr
     ],
     data: [],
   })
-  const dispatchProductAction = rowData => {
+
+  const toggleModal = flag => {
+    setOpen(flag)
+  }
+  const kitchenActions = (rowData, action) => {
+    setOpen(true)
+    setAction(action)
+    switch (action) {
+      case 'Dispatch':
+        setMessage('Are you sure you want to dispatch the product?')
+        break
+      case 'Cancel':
+        setMessage('Are you sure you want to cancel the product?')
+        break
+      default:
+        break
+    }
+    if (rowData) setRowData(rowData)
+  }
+  const confirm = () => {
     const {orderId, productId} = rowData
-    dispatchProduct({orderId, productId})
+    const orderIndex = pendingOrders.findIndex(order => order.id === orderId)
+    switch (action) {
+      case 'Dispatch':
+        const dispatchedProducts = pendingOrders[orderIndex].products
+          .filter(product => product.id !== productId)
+          .filter(product => !product.order_product.cancelled)
+        debugger
+        const areAllProductsDispatched = dispatchedProducts.map(product => product.order_product.dispatched)
+        if (areAllProductsDispatched.every(dispatched => !!dispatched)) {
+          dispatchOrder({id: orderId, status: ORDER_STATUS_VALUE.READY_TO_DELIVER})
+        }
+        dispatchProduct({orderId, productId})
+        break
+      case 'Cancel':
+        const cancelledProducts = pendingOrders[orderIndex].products.filter(product => product.id !== productId)
+        const areAllProductsCancelled = cancelledProducts.map(product => product.order_product.cancelled)
+        if (areAllProductsCancelled.every(cancelled => !!cancelled)) {
+          cancelOrder({orderId, tableId: pendingOrders[orderIndex].tableId})
+        }
+        cancelProduct({orderId, productId})
+        break
+      default:
+        break
+    }
     toggleModal(false)
     setRowData({})
   }
-  const toggleModal = (flag, rowData) => {
-    setOpen(flag)
-    if (rowData) setRowData(rowData)
-  }
-
   React.useEffect(() => {
     fetchPendingDishes()
   }, [fetchPendingDishes])
@@ -81,9 +109,11 @@ const Kitchen = ({dispatchProduct, fetchPendingDishes, pendingOrders, dispatchOr
     if (pendingOrders.length > 0) {
       const orderProducts = []
       pendingOrders.forEach(order => {
-        const {id} = order
-        return order.products.length > 0
-          ? order.products.map(product =>
+        if (order.products.length > 0)
+          order.products
+            .filter(product => !product.order_product.dispatched)
+            .filter(product => !product.order_product.cancelled)
+            .map(product =>
               orderProducts.push({
                 orderId: order.id,
                 deliverBy: order.deliver_time,
@@ -91,7 +121,6 @@ const Kitchen = ({dispatchProduct, fetchPendingDishes, pendingOrders, dispatchOr
                 productId: product.id,
               })
             )
-          : dispatchOrder({id, status: ORDER_STATUS_VALUE.READY_TO_DELIVER})
       })
       setState({columns: [...state.columns], data: orderProducts})
     }
@@ -114,21 +143,12 @@ const Kitchen = ({dispatchProduct, fetchPendingDishes, pendingOrders, dispatchOr
         onClose={() => toggleModal(false)}
       >
         <div style={modalStyle} className={classes.paper}>
-          <h2 id="simple-modal-title">Are you sure you want to dispatch the product?</h2>
+          <h2 id="simple-modal-title">{message}</h2>
           <div>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => dispatchProductAction(rowData)}
-            >
-              Dispatch
+            <Button variant="contained" color="primary" onClick={() => confirm()}>
+              {action}
             </Button>
-            {/* @todo allow the user to cancel a product and ask to cancel the entire order, work on styles */}
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={() => toggleModal(false)}
-            >
+            <Button variant="contained" color="secondary" onClick={() => toggleModal(false)}>
               Cancel
             </Button>
           </div>
@@ -146,5 +166,7 @@ export default connect(
     fetchPendingDishes,
     dispatchProduct,
     dispatchOrder,
+    cancelProduct,
+    cancelOrder,
   }
 )(Kitchen)

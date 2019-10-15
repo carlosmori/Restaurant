@@ -21,7 +21,7 @@ import Billing from './billing/Billing'
 import Reports from './reports/Reports'
 import Users from './users/Users'
 import {connect} from 'react-redux'
-import InformativeDialog from '../dialogs/informative-dialog'
+import Snackbar from '../dialogs/snackbar'
 import LoadingDialog from '../dialogs/loading-dialog'
 
 function Copyright() {
@@ -200,10 +200,10 @@ const Dashboard = props => {
         </div>
 
         {props.displayLoadingDialog ? <LoadingDialog /> : null}
-        {props.informativeDialog.show ? (
-          <InformativeDialog
-            message={props.informativeDialog.message}
-            variant={props.informativeDialog.variant}
+        {props.snackbar.show ? (
+          <Snackbar
+            message={props.snackbar.message}
+            variant={props.snackbar.variant}
           />
         ) : null}
       </main>
@@ -213,7 +213,7 @@ const Dashboard = props => {
 
 const mapStateToProps = state => ({
   dashboardTitle: state.navigationList.currentTab,
-  informativeDialog: state.dashboard.informativeDialog,
+  snackbar: state.dashboard.snackbar,
   displayLoadingDialog: state.dashboard.displayLoadingDialog,
 })
 export default connect(

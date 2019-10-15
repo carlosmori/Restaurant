@@ -5,7 +5,7 @@ export const dashboardTestAction = payload => ({
   type: DASHBOARD_TEST_ACTION,
   payload,
 })
-export const showInformativeDialog = payload => ({
+export const showSnackbar = payload => ({
   type: SHOW_INFORMATIVE_DIALOG,
   payload,
 })

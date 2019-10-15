@@ -5,7 +5,8 @@ module.exports = (sequelize, DataTypes) => {
     {
       order_id: DataTypes.INTEGER,
       product_id: DataTypes.INTEGER,
-      dispatched: DataTypes.BOOLEAN
+      dispatched: DataTypes.BOOLEAN,
+      cancelled: DataTypes.BOOLEAN,
     },
     {
       freezeTableName: true // Model tableName will be the same as the model name

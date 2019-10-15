@@ -62,23 +62,23 @@ export const Table = ({toggleModal, table, deliverOrder, index, closeTable, canc
   const [anchorEl, setAnchorEl] = React.useState(null)
   const classes = useStyles()
 
-  const tableMenuClick = (cancelOrderFlag = false) => {
+  const tableActions = action => {
     let id, tableId
     if (table.currentOrder) {
       id = table.currentOrder.id
       tableId = table.id
     }
-
-    switch (table.status) {
-      case TABLE_STATUS_VALUE.FREE:
+    switch (action) {
+      case 'Take':
         toggleModal({isOrderMenuModalToggled: true, tableId: table.id})
         break
-      case TABLE_STATUS_VALUE.CLIENTS_WAITING:
-        cancelOrderFlag
-          ? cancelOrder({orderId: id, tableId})
-          : deliverOrder({id, status: ORDER_STATUS_VALUE.DELIVERED, tableId})
+      case 'Cancel':
+        cancelOrder({orderId: id, tableId})
         break
-      case TABLE_STATUS_VALUE.CLIENTS_EATING:
+      case 'Deliver':
+        deliverOrder({id, status: ORDER_STATUS_VALUE.DELIVERED, tableId})
+        break
+      case 'Close':
         closeTable({tableId})
         break
     }
@@ -118,19 +118,27 @@ export const Table = ({toggleModal, table, deliverOrder, index, closeTable, canc
             </Fab>
             <Menu id="simple-menu" anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>
               {table.status === TABLE_STATUS_VALUE.FREE ? (
-                <MenuItem onClick={tableMenuClick}>Take Order</MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    tableActions('Take')
+                  }}
+                >
+                  Take Order
+                </MenuItem>
               ) : null}
               {table.status === TABLE_STATUS_VALUE.CLIENTS_WAITING ? (
                 <div>
                   <MenuItem
                     disabled={table.currentOrder.status !== ORDER_STATUS_VALUE.READY_TO_DELIVER}
-                    onClick={tableMenuClick}
+                    onClick={() => {
+                      tableActions('Deliver')
+                    }}
                   >
                     Deliver Order
                   </MenuItem>
                   <MenuItem
                     onClick={() => {
-                      tableMenuClick(true)
+                      tableActions('Cancel')
                     }}
                   >
                     Cancel Order
@@ -138,7 +146,13 @@ export const Table = ({toggleModal, table, deliverOrder, index, closeTable, canc
                 </div>
               ) : null}
               {table.status === TABLE_STATUS_VALUE.CLIENTS_EATING ? (
-                <MenuItem onClick={tableMenuClick}>Close Table</MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    tableActions('Close')
+                  }}
+                >
+                  Close Table
+                </MenuItem>
               ) : null}
             </Menu>
           </div>

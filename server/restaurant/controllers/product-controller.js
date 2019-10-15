@@ -1,4 +1,5 @@
 const product = require("../models").product;
+const orderProduct = require("../models").order_product;
 module.exports = {
   // Create One
   async create(req, res) {
@@ -38,12 +39,12 @@ module.exports = {
   // Delete one
   async delete(req, res) {
     try {
-      const { id } = req.body;
-      const deletedProduct = await product.destroy({
-        where: { id }
+      const { orderId, productId } = req.body;
+      const deletedProduct = await orderProduct.destroy({
+        where: { order_id: orderId, product_id: productId, dispatched: 0 }
       });
       const response = deletedProduct
-        ? `Product with id ${id} deleted successfully`
+        ? `Product with id deleted successfully`
         : `No Product found that matched provided criteria`;
       return res.status(200).json(response);
     } catch (error) {
