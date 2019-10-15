@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
       user_id: DataTypes.INTEGER,
       status: DataTypes.STRING,
       amount: DataTypes.FLOAT,
-      table_id: DataTypes.INTEGER,
+      tableId: DataTypes.INTEGER,
       deliver_time: DataTypes.DATE
     },
     {
@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
       as: "waiterWaitress"
     });
     order.belongsTo(models.table, {
-      foreignKey: "table_id",
+      foreignKey: "tableId",
       as: "currentTable"
     });
     order.belongsToMany(models.product, {

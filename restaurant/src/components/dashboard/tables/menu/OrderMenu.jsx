@@ -110,7 +110,7 @@ const OrderMenu = props => {
     const order = {
       amount: orderTotalAmount,
       cook_time: orderEstimatedCookTime,
-      table_id: props.tableId,
+      tableId: props.tableId,
       products: selectedProducts.map(product => product.id),
     }
     handleClose()

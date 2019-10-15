@@ -10,7 +10,7 @@ module.exports = {
   // Create One
   async create(req, res) {
     try {
-      const { amount, cook_time, table_id, products } = req.body;
+      const { amount, cook_time, tableId, products } = req.body;
       //@todo fix hardcoded userId with user id from localstorage
       const user_id = 1;
       //Crear Orden y con el id, actualizar la mesa
@@ -22,7 +22,7 @@ module.exports = {
         status: 1,
         amount,
         deliver_time,
-        table_id
+        tableId
       });
       //@todo refactor hardcoded status for a proper enum
       const tableUpdated = await table.update(
@@ -30,7 +30,7 @@ module.exports = {
           status: 2,
           order_id: new_order.id
         },
-        { where: { id: table_id } }
+        { where: { id: tableId } }
       );
       for (const id of products) {
         await orderProduct.create({
@@ -60,7 +60,7 @@ module.exports = {
         ]
       });
       new_order = new_order.toJSON();
-      new_order = { ...new_order, tableId: table_id, tableStatus: 2 };
+      new_order = { ...new_order, tableId, tableStatus: 2 };
       return res.status(201).send(new_order);
     } catch (error) {
       return res.status(500).json({ error: error.toString() });
@@ -201,7 +201,7 @@ module.exports = {
   //Deliver Order
   async deliverOrder(req, res) {
     try {
-      const { id, table_id } = req.body;
+      const { id, tableId } = req.body;
       await order.update(
         {
           status: 5
@@ -212,7 +212,7 @@ module.exports = {
         {
           status: 3
         },
-        { where: { id: table_id } }
+        { where: { id: tableId } }
       );
       const updated_order = await order.findOne({
         where: { id }

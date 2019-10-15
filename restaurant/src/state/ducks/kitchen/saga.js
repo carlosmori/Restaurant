@@ -58,8 +58,6 @@ export function* dispatchOrder(action) {
     yield put({type: DASHBOARD_LOADING, payload: {loading: true}})
     const response = yield call(dispatchOrderHttpCall, action.payload)
     yield timeout(500)
-    //@todo Dispatch order success should modify order reducer, to update the status and allow the user
-    //to deliver the order to the table
     yield put({
       type: DISPATCH_ORDER.SUCCESS,
       payload: response.data,

@@ -2,11 +2,7 @@ import React, {useEffect} from 'react'
 import Grid from '@material-ui/core/Grid'
 import {makeStyles} from '@material-ui/core/styles'
 import {connect} from 'react-redux'
-import {
-  fetchTables,
-  fetchOrderMenu,
-  updateTable,
-} from '../../../state/ducks/tables/actions'
+import {fetchTables, fetchOrderMenu, updateTable} from '../../../state/ducks/tables/actions'
 import {showInformativeDialog} from '../../../state/ducks/dashboard/actions'
 import Table from './table/Table'
 import OrderMenu from './menu/OrderMenu'

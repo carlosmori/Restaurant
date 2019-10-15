@@ -16,12 +16,7 @@ import Select from '@material-ui/core/Select'
 import Button from '@material-ui/core/Button'
 import moment from 'moment'
 
-import {
-  fetchUsers,
-  updateUser,
-  deleteUser,
-  addUser,
-} from '../../../state/ducks/users/actions'
+import {fetchUsers, updateUser, deleteUser, addUser} from '../../../state/ducks/users/actions'
 const useStyles = makeStyles(theme => ({
   modal: {
     display: 'flex',
@@ -139,11 +134,8 @@ export const Users = props => {
   }, [props.users])
 
   const addUser = () => {
-    //@todo
-    //add loading, try catch and modal to inform the user
     const date_of_birth = moment(selectedDate).format('YYYY-MM-d')
     const newUser = {...values, date_of_birth}
-    console.log(newUser)
     props.addUser(newUser)
     handleClose()
   }
@@ -262,12 +254,7 @@ export const Users = props => {
                 </Select>
               </FormControl>
               <div className={classes.buttonContainer}>
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  onClick={handleClose}
-                  className={classes.button}
-                >
+                <Button variant="contained" color="secondary" onClick={handleClose} className={classes.button}>
                   Close
                 </Button>
                 <Button

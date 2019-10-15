@@ -9,14 +9,11 @@ import {connect} from 'react-redux'
 import {toggleModal} from '../../../../state/ducks/order-menu/actions'
 import Menu from '@material-ui/core/Menu'
 import MenuItem from '@material-ui/core/MenuItem'
-import {
-  TABLE_STATUS_KEY,
-  TABLE_STATUS_VALUE,
-} from '../../../../utils/enums/tableStatusEnum'
+import {TABLE_STATUS_KEY, TABLE_STATUS_VALUE} from '../../../../utils/enums/tableStatusEnum'
 import Timer from '../../../timer/Timer'
 import moment from 'moment'
 import {ORDER_STATUS_VALUE} from '../../../../utils/enums/orderStatusEnum'
-import {deliverOrder} from '../../../../state/ducks/orders/actions'
+import {deliverOrder} from '../../../../state/ducks/tables/actions'
 const useStyles = makeStyles(theme => ({
   paper: {
     display: 'flex',
@@ -27,7 +24,6 @@ const useStyles = makeStyles(theme => ({
     padding: theme.spacing(2),
     textAlign: 'center',
     color: theme.palette.text.secondary,
-    // borderRadius: '50%',
     boxShadow: '0px 10px 20px 5px #00000082',
     position: 'relative',
     backgroundColor: '#6e4e26',
@@ -73,11 +69,11 @@ export const Table = ({toggleModal, table, deliverOrder, index}) => {
 
   const deliverOrderAction = order => {
     const id = table.currentOrder.id
-    const table_id = table.id
+    const tableId = table.id
     deliverOrder({
       id,
       status: ORDER_STATUS_VALUE.DELIVERED,
-      table_id,
+      tableId,
     })
     setAnchorEl(null)
   }
@@ -108,34 +104,19 @@ export const Table = ({toggleModal, table, deliverOrder, index}) => {
         </div>
         <Paper className={classes.paper}>
           <div className={classes.status}>{TABLE_STATUS_KEY[table.status]}</div>
-          {shouldDisplayTimer() ? (
-            <Timer deliverBy={table.currentOrder.deliver_time} />
-          ) : null}
+          {shouldDisplayTimer() ? <Timer deliverBy={table.currentOrder.deliver_time} /> : null}
           <div className={classes.fabContainer}>
-            <Fab
-              className={classes.fab}
-              color="primary"
-              aria-label="add"
-              onClick={handleTableActionsClick}
-            >
+            <Fab className={classes.fab} color="primary" aria-label="add" onClick={handleTableActionsClick}>
               <MoreHorizIcon aria-controls="simple-menu" aria-haspopup="true" />
             </Fab>
-            <Menu
-              id="simple-menu"
-              anchorEl={anchorEl}
-              keepMounted
-              open={Boolean(anchorEl)}
-              onClose={handleClose}
-            >
+            <Menu id="simple-menu" anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>
               {table.status === TABLE_STATUS_VALUE.FREE ? (
                 <MenuItem onClick={openOrderMenu}>Take Order</MenuItem>
               ) : null}
               {table.status === TABLE_STATUS_VALUE.CLIENTS_WAITING ? (
                 <div>
                   <MenuItem
-                    disabled={
-                      table.currentOrder.status !== ORDER_STATUS_VALUE.READY_TO_DELIVER
-                    }
+                    disabled={table.currentOrder.status !== ORDER_STATUS_VALUE.READY_TO_DELIVER}
                     onClick={deliverOrderAction}
                   >
                     Deliver Order

@@ -11,11 +11,6 @@ export default (state = initialState, {type, payload}) => {
         ...state,
         orderList: [...payload.success],
       }
-    case DELIVER_ORDER.SUCCESS:
-      return {
-        ...state,
-        orderList: [...state.orderList].filter(order => order.id !== payload.id),
-      }
     default:
       return state
   }

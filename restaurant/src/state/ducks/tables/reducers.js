@@ -1,11 +1,12 @@
-import {FETCH_TABLE, FETCH_ORDER_MENU, UPDATE_TABLE, TAKE_ORDER} from './types'
+import {FETCH_TABLE, FETCH_ORDER_MENU, UPDATE_TABLE, TAKE_ORDER, DELIVER_ORDER} from './types'
+import {TABLE_STATUS_VALUE} from '../../../utils/enums/tableStatusEnum'
 const initialState = {
   tablesList: [],
   productsList: [],
 }
 
 export default (state = initialState, {type, payload}) => {
-  let currentOrder, newTableList, tableStatus, tableIndex, updatedTable
+  let currentOrder, newTablesList, tableStatus, tableIndex, updatedTable, updatedOrder
   switch (type) {
     case FETCH_TABLE.SUCCESS:
       return {
@@ -17,29 +18,23 @@ export default (state = initialState, {type, payload}) => {
         ...state,
         productsList: payload.products,
       }
-    case UPDATE_TABLE:
-      currentOrder = payload.currentOrder
-      tableStatus = payload.tableStatus
-      const newTablesList = [...state.tablesList]
-      tableIndex = newTablesList.findIndex(table => table.id === currentOrder.tableId)
-      updatedTable = {...newTablesList[tableIndex]}
-      updatedTable.status = tableStatus
-      updatedTable.currentOrder = currentOrder
-      newTablesList[tableIndex] = updatedTable
-      return {
-        ...state,
-        tablesList: [...newTablesList],
-      }
     case TAKE_ORDER.SUCCESS:
-      currentOrder = payload
-      const newTableList = [...state.tablesList]
-      tableIndex = newTableList.findIndex(table => table.id === currentOrder.tableId)
-      updatedTable = {...newTableList[tableIndex]}
-      updatedTable.currentOrder = currentOrder
-      newTableList[tableIndex] = updatedTable
       return {
         ...state,
-        tablesList: [...newTableList],
+        tablesList: state.tablesList.map(table =>
+          table.id === payload.tableId
+            ? {...table, currentOrder: payload, status: TABLE_STATUS_VALUE.CLIENTS_WAITING}
+            : table
+        ),
+      }
+    case DELIVER_ORDER.SUCCESS:
+      return {
+        ...state,
+        tablesList: state.tablesList.map(table =>
+          table.id === payload.tableId
+            ? {...table, currentOrder: payload, status: TABLE_STATUS_VALUE.CLIENTS_EATING}
+            : table
+        ),
       }
     default:
       return state

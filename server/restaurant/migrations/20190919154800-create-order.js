@@ -11,7 +11,7 @@ module.exports = {
       user_id: {
         type: Sequelize.INTEGER
       },
-      table_id: {
+      tableId: {
         type: Sequelize.INTEGER
       },
       status: {
