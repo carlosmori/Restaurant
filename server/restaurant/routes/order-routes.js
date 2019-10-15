@@ -10,6 +10,7 @@ const wrapAsync = fn => {
 router.get("/pendingDishes", wrapAsync(orderController.getPendingDishes));
 router.get("/pendingOrders", wrapAsync(orderController.getPendingOrders));
 router.post("/deliverOrder", wrapAsync(orderController.deliverOrder));
+router.post("/cancelOrder", wrapAsync(orderController.cancelOrder));
 router.get("/:id", wrapAsync(orderController.getOne));
 router.get("/", wrapAsync(orderController.getAll));
 router.post("/", wrapAsync(orderController.create));

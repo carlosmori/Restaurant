@@ -223,6 +223,22 @@ module.exports = {
       return res.status(500).json({ error: error.toString() });
     }
   },
+  // Cancel Order
+  async cancelOrder(req, res) {
+    try {
+      const { orderId, tableId } = req.body;
+      await order.update({ status: 5 }, { where: { id: orderId } });
+      await orderProduct.destroy({ where: { order_id: orderId, dispatched: 0 } });
+      await table.update(
+        { status: 1, order_id: null },
+        { where: { id: tableId } }
+      );
+      const response = `Order deleted successfully`;
+      return res.status(200).json(response);
+    } catch (error) {
+      return res.status(500).json({ error: error.toString() });
+    }
+  },
   // Delete one
   async delete(req, res) {
     try {

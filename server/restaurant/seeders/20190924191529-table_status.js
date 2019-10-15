@@ -19,11 +19,6 @@ module.exports = {
           description: "Clients Eating",
           createdAt: new Date(),
           updatedAt: new Date()
-        },
-        {
-          description: "Closed",
-          createdAt: new Date(),
-          updatedAt: new Date()
         }
       ],
       {}

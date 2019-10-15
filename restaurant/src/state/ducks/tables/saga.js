@@ -1,5 +1,5 @@
 import {all, call, put, takeLatest} from 'redux-saga/effects'
-import {FETCH_TABLE, FETCH_ORDER_MENU, TAKE_ORDER, DELIVER_ORDER, CLOSE_TABLE} from './types'
+import {FETCH_TABLE, FETCH_ORDER_MENU, TAKE_ORDER, DELIVER_ORDER, CLOSE_TABLE, CANCEL_ORDER} from './types'
 import {axios} from '../../../utils/http/axios-singleton'
 import {DASHBOARD_LOADING, DASHBOARD_SNACKBAR} from '../dashboard/types'
 import {TABLE_STATUS_VALUE} from '../../../utils/enums/tableStatusEnum'
@@ -45,6 +45,33 @@ export function* takeOrder(action) {
   }
 }
 
+export function* cancelOrder(action) {
+  try {
+    yield put({type: DASHBOARD_LOADING, payload: {loading: true}})
+    const response = yield call(cancelOrderHttpCall, action.payload)
+    yield put({
+      type: CANCEL_ORDER.SUCCESS,
+      payload: action.payload,
+    })
+
+    yield put({type: DASHBOARD_LOADING, payload: {loading: false}})
+    yield put({
+      type: DASHBOARD_SNACKBAR,
+      payload: {
+        show: true,
+        message: 'Order cancelled successfully',
+        variant: 'success',
+      },
+    })
+  } catch (error) {
+    yield put({type: CANCEL_ORDER.FAILED, payload: {error}})
+    yield put({type: DASHBOARD_LOADING, payload: {loading: false}})
+    yield put({
+      type: DASHBOARD_SNACKBAR,
+      payload: {show: true, message: 'An error has occurred', variant: 'warning'},
+    })
+  }
+}
 export function* deliverOrder(action) {
   try {
     yield put({type: DASHBOARD_LOADING, payload: {loading: true}})
@@ -102,6 +129,7 @@ export function* closeTable(action) {
 const fetchTableHttpCall = () => axios.get(`/tables`)
 const fecthOrderMenuHttpCall = () => axios.get(`/products`)
 const takeOrderHttpCall = order => axios.post('/orders', {...order})
+const cancelOrderHttpCall = payload => axios.post('orders/cancelOrder', {...payload})
 const deliverOrderHttpCall = payload => axios.post('orders/deliverOrder', {...payload})
 const closeTableHttpCall = payload => axios.put(`/tables`, payload)
 
@@ -110,6 +138,7 @@ export default function* root() {
     takeLatest(FETCH_TABLE.REQUEST, fetchTables),
     takeLatest(FETCH_ORDER_MENU.REQUEST, fetchOrderMenu),
     takeLatest(TAKE_ORDER.REQUEST, takeOrder),
+    takeLatest(CANCEL_ORDER.REQUEST, cancelOrder),
     takeLatest(DELIVER_ORDER.REQUEST, deliverOrder),
     takeLatest(CLOSE_TABLE.REQUEST, closeTable),
   ])

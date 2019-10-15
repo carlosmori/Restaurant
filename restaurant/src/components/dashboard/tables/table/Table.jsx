@@ -13,7 +13,7 @@ import {TABLE_STATUS_KEY, TABLE_STATUS_VALUE} from '../../../../utils/enums/tabl
 import Timer from '../../../timer/Timer'
 import moment from 'moment'
 import {ORDER_STATUS_VALUE} from '../../../../utils/enums/orderStatusEnum'
-import {deliverOrder, closeTable} from '../../../../state/ducks/tables/actions'
+import {deliverOrder, closeTable, cancelOrder} from '../../../../state/ducks/tables/actions'
 const useStyles = makeStyles(theme => ({
   paper: {
     display: 'flex',
@@ -58,23 +58,25 @@ const useStyles = makeStyles(theme => ({
     textShadow: '-2px 10px 10px rgba(0, 0, 0, 0.87)',
   },
 }))
-export const Table = ({toggleModal, table, deliverOrder, index, closeTable}) => {
+export const Table = ({toggleModal, table, deliverOrder, index, closeTable, cancelOrder}) => {
   const [anchorEl, setAnchorEl] = React.useState(null)
   const classes = useStyles()
 
-  const tableMenuClick = () => {
+  const tableMenuClick = (cancelOrderFlag = false) => {
     let id, tableId
     if (table.currentOrder) {
       id = table.currentOrder.id
       tableId = table.id
     }
-    
+
     switch (table.status) {
       case TABLE_STATUS_VALUE.FREE:
         toggleModal({isOrderMenuModalToggled: true, tableId: table.id})
         break
       case TABLE_STATUS_VALUE.CLIENTS_WAITING:
-        deliverOrder({id, status: ORDER_STATUS_VALUE.DELIVERED, tableId})
+        cancelOrderFlag
+          ? cancelOrder({orderId: id, tableId})
+          : deliverOrder({id, status: ORDER_STATUS_VALUE.DELIVERED, tableId})
         break
       case TABLE_STATUS_VALUE.CLIENTS_EATING:
         closeTable({tableId})
@@ -126,7 +128,11 @@ export const Table = ({toggleModal, table, deliverOrder, index, closeTable}) => 
                   >
                     Deliver Order
                   </MenuItem>
-                  <MenuItem onClick={tableMenuClick} disabled={true}>
+                  <MenuItem
+                    onClick={() => {
+                      tableMenuClick(true)
+                    }}
+                  >
                     Cancel Order
                   </MenuItem>
                 </div>
@@ -148,5 +154,6 @@ export default connect(
     toggleModal,
     deliverOrder,
     closeTable,
+    cancelOrder,
   }
 )(Table)
