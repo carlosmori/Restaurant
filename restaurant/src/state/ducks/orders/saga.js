@@ -8,7 +8,6 @@ export function* fetchOrders() {
   try {
     yield put({type: DASHBOARD_LOADING, payload: {loading: true}})
     const response = yield call(fetchOrdersHttpCall)
-    yield timeout(500)
     yield put({
       type: FETCH_ORDERS.SUCCESS,
       payload: {success: response.data},
@@ -30,6 +29,3 @@ export default function* root() {
   yield all([takeLatest(FETCH_ORDERS.REQUEST, fetchOrders)])
 }
 
-const timeout = ms => {
-  return new Promise(resolve => setTimeout(resolve, ms))
-}

@@ -13,7 +13,7 @@ import {TABLE_STATUS_KEY, TABLE_STATUS_VALUE} from '../../../../utils/enums/tabl
 import Timer from '../../../timer/Timer'
 import moment from 'moment'
 import {ORDER_STATUS_VALUE} from '../../../../utils/enums/orderStatusEnum'
-import {deliverOrder} from '../../../../state/ducks/tables/actions'
+import {deliverOrder, closeTable} from '../../../../state/ducks/tables/actions'
 const useStyles = makeStyles(theme => ({
   paper: {
     display: 'flex',
@@ -58,23 +58,28 @@ const useStyles = makeStyles(theme => ({
     textShadow: '-2px 10px 10px rgba(0, 0, 0, 0.87)',
   },
 }))
-export const Table = ({toggleModal, table, deliverOrder, index}) => {
+export const Table = ({toggleModal, table, deliverOrder, index, closeTable}) => {
   const [anchorEl, setAnchorEl] = React.useState(null)
   const classes = useStyles()
 
-  const openOrderMenu = () => {
-    setAnchorEl(null)
-    toggleModal({isOrderMenuModalToggled: true, tableId: table.id})
-  }
-
-  const deliverOrderAction = order => {
-    const id = table.currentOrder.id
-    const tableId = table.id
-    deliverOrder({
-      id,
-      status: ORDER_STATUS_VALUE.DELIVERED,
-      tableId,
-    })
+  const tableMenuClick = () => {
+    let id, tableId
+    if (table.currentOrder) {
+      id = table.currentOrder.id
+      tableId = table.id
+    }
+    
+    switch (table.status) {
+      case TABLE_STATUS_VALUE.FREE:
+        toggleModal({isOrderMenuModalToggled: true, tableId: table.id})
+        break
+      case TABLE_STATUS_VALUE.CLIENTS_WAITING:
+        deliverOrder({id, status: ORDER_STATUS_VALUE.DELIVERED, tableId})
+        break
+      case TABLE_STATUS_VALUE.CLIENTS_EATING:
+        closeTable({tableId})
+        break
+    }
     setAnchorEl(null)
   }
   const handleTableActionsClick = event => {
@@ -111,23 +116,23 @@ export const Table = ({toggleModal, table, deliverOrder, index}) => {
             </Fab>
             <Menu id="simple-menu" anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>
               {table.status === TABLE_STATUS_VALUE.FREE ? (
-                <MenuItem onClick={openOrderMenu}>Take Order</MenuItem>
+                <MenuItem onClick={tableMenuClick}>Take Order</MenuItem>
               ) : null}
               {table.status === TABLE_STATUS_VALUE.CLIENTS_WAITING ? (
                 <div>
                   <MenuItem
                     disabled={table.currentOrder.status !== ORDER_STATUS_VALUE.READY_TO_DELIVER}
-                    onClick={deliverOrderAction}
+                    onClick={tableMenuClick}
                   >
                     Deliver Order
                   </MenuItem>
-                  <MenuItem onClick={() => {}} disabled={true}>
+                  <MenuItem onClick={tableMenuClick} disabled={true}>
                     Cancel Order
                   </MenuItem>
                 </div>
               ) : null}
               {table.status === TABLE_STATUS_VALUE.CLIENTS_EATING ? (
-                <MenuItem onClick={() => {}}>Close Table</MenuItem>
+                <MenuItem onClick={tableMenuClick}>Close Table</MenuItem>
               ) : null}
             </Menu>
           </div>
@@ -142,5 +147,6 @@ export default connect(
   {
     toggleModal,
     deliverOrder,
+    closeTable,
   }
 )(Table)

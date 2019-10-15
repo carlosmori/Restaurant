@@ -1,4 +1,4 @@
-import {FETCH_TABLE, FETCH_ORDER_MENU, UPDATE_TABLE, TAKE_ORDER, DELIVER_ORDER} from './types'
+import {FETCH_TABLE, FETCH_ORDER_MENU, UPDATE_TABLE, TAKE_ORDER, DELIVER_ORDER, CLOSE_TABLE} from './types'
 import {TABLE_STATUS_VALUE} from '../../../utils/enums/tableStatusEnum'
 const initialState = {
   tablesList: [],
@@ -6,7 +6,6 @@ const initialState = {
 }
 
 export default (state = initialState, {type, payload}) => {
-  let currentOrder, newTablesList, tableStatus, tableIndex, updatedTable, updatedOrder
   switch (type) {
     case FETCH_TABLE.SUCCESS:
       return {
@@ -34,6 +33,13 @@ export default (state = initialState, {type, payload}) => {
           table.id === payload.tableId
             ? {...table, currentOrder: payload, status: TABLE_STATUS_VALUE.CLIENTS_EATING}
             : table
+        ),
+      }
+    case CLOSE_TABLE.SUCCESS:
+      return {
+        ...state,
+        tablesList: state.tablesList.map(table =>
+          table.id === payload.tableId ? {...table, currentOrder: null, status: TABLE_STATUS_VALUE.FREE} : table
         ),
       }
     default:

@@ -30,7 +30,6 @@ export function* dispatchProduct(action) {
   try {
     yield put({type: DASHBOARD_LOADING, payload: {loading: true}})
     const response = yield call(dispatchProductHttpCall, action.payload)
-    yield timeout(500)
     yield put({
       type: DISPATCH_PRODUCT.SUCCESS,
       payload: response.data,
@@ -57,7 +56,6 @@ export function* dispatchOrder(action) {
   try {
     yield put({type: DASHBOARD_LOADING, payload: {loading: true}})
     const response = yield call(dispatchOrderHttpCall, action.payload)
-    yield timeout(500)
     yield put({
       type: DISPATCH_ORDER.SUCCESS,
       payload: response.data,
@@ -90,8 +88,4 @@ export default function* root() {
     takeLatest(DISPATCH_PRODUCT.REQUEST, dispatchProduct),
     takeLatest(DISPATCH_ORDER.REQUEST, dispatchOrder),
   ])
-}
-
-const timeout = ms => {
-  return new Promise(resolve => setTimeout(resolve, ms))
 }
