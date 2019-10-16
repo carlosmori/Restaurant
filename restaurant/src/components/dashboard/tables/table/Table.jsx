@@ -14,6 +14,7 @@ import Timer from '../../../timer/Timer'
 import moment from 'moment'
 import {ORDER_STATUS_VALUE} from '../../../../utils/enums/orderStatusEnum'
 import {deliverOrder, closeTable, cancelOrder} from '../../../../state/ducks/tables/actions'
+
 const useStyles = makeStyles(theme => ({
   paper: {
     display: 'flex',
@@ -26,7 +27,7 @@ const useStyles = makeStyles(theme => ({
     color: theme.palette.text.secondary,
     boxShadow: '0px 10px 20px 5px #00000082',
     position: 'relative',
-    backgroundColor: '#6e4e26',
+    backgroundColor: '#482a05',
     backgroundImage: `url(${logoPattern})`,
   },
   gridBlock: {
@@ -61,7 +62,6 @@ const useStyles = makeStyles(theme => ({
 export const Table = ({toggleModal, table, deliverOrder, index, closeTable, cancelOrder}) => {
   const [anchorEl, setAnchorEl] = React.useState(null)
   const classes = useStyles()
-
   const tableActions = action => {
     let id, tableId
     if (table.currentOrder) {
@@ -73,30 +73,19 @@ export const Table = ({toggleModal, table, deliverOrder, index, closeTable, canc
         toggleModal({isOrderMenuModalToggled: true, tableId: table.id})
         break
       case 'Cancel':
-        cancelOrder({orderId: id, tableId})
+        cancelOrder({orderId: id, currentOrder: table.currentOrder})
         break
       case 'Deliver':
         deliverOrder({id, status: ORDER_STATUS_VALUE.DELIVERED, tableId})
         break
       case 'Close':
-        closeTable({tableId})
+        closeTable({currentOrder: table.currentOrder})
         break
     }
     setAnchorEl(null)
   }
   const handleTableActionsClick = event => {
     setAnchorEl(event.currentTarget)
-  }
-
-  const shouldDisplayTimer = () => {
-    if (table.currentOrder) {
-      const then = moment(new Date(table.currentOrder.deliver_time)).valueOf()
-      const now = moment().valueOf()
-      const futureDeliverBy = then - now > 0
-      return table.status === TABLE_STATUS_VALUE.CLIENTS_WAITING && futureDeliverBy
-    } else {
-      return false
-    }
   }
 
   const handleClose = () => {
@@ -111,7 +100,10 @@ export const Table = ({toggleModal, table, deliverOrder, index, closeTable, canc
         </div>
         <Paper className={classes.paper}>
           <div className={classes.status}>{TABLE_STATUS_KEY[table.status]}</div>
-          {shouldDisplayTimer() ? <Timer deliverBy={table.currentOrder.deliver_time} /> : null}
+          {table.status === TABLE_STATUS_VALUE.CLIENTS_WAITING ? (
+            <Timer deliverBy={table.currentOrder.deliver_time} orderId={table.currentOrder.id} />
+          ) : null}
+
           <div className={classes.fabContainer}>
             <Fab className={classes.fab} color="primary" aria-label="add" onClick={handleTableActionsClick}>
               <MoreHorizIcon aria-controls="simple-menu" aria-haspopup="true" />

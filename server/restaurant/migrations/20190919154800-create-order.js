@@ -23,6 +23,9 @@ module.exports = {
       deliver_time: {
         type: Sequelize.DATE
       },
+      afterDeliverTime: {
+        type: Sequelize.BOOLEAN
+      },
       createdAt: {
         type: Sequelize.DATE,
         allowNull: false

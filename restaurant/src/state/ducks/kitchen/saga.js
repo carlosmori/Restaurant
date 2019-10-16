@@ -30,7 +30,6 @@ export function* dispatchOrder(action) {
   const {productId} = action.payload
   const orderId = action.payload.id
   const productPayload = {payload: {productId, orderId}}
-  debugger
   try {
     yield put({type: DASHBOARD_LOADING, payload: {loading: true}})
     yield call(dispatchProduct, productPayload)
@@ -58,7 +57,6 @@ export function* dispatchOrder(action) {
   }
 }
 export function* dispatchProduct(action) {
-  debugger
   try {
     yield put({type: DASHBOARD_LOADING, payload: {loading: true}})
     const response = yield call(dispatchProductHttpCall, action.payload)

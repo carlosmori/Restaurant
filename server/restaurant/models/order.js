@@ -7,7 +7,8 @@ module.exports = (sequelize, DataTypes) => {
       status: DataTypes.STRING,
       amount: DataTypes.FLOAT,
       tableId: DataTypes.INTEGER,
-      deliver_time: DataTypes.DATE
+      deliver_time: DataTypes.DATE,
+      afterDeliverTime: DataTypes.BOOLEAN
     },
     {
       freezeTableName: true // Model tableName will be the same as the model name

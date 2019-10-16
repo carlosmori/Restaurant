@@ -45,10 +45,11 @@ export default (state = initialState, {type, payload}) => {
       }
     case CLOSE_TABLE.SUCCESS:
     case CANCEL_ORDER.SUCCESS:
+      const {tableId} = payload
       return {
         ...state,
         tablesList: state.tablesList.map(table =>
-          table.id === payload.tableId ? {...table, currentOrder: null, status: TABLE_STATUS_VALUE.FREE} : table
+          table.id === tableId ? {...table, currentOrder: null, status: TABLE_STATUS_VALUE.FREE} : table
         ),
       }
     default:

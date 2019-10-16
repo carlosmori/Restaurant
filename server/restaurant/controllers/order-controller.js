@@ -22,7 +22,8 @@ module.exports = {
         status: 1,
         amount,
         deliver_time,
-        tableId
+        tableId,
+        afterDeliverTime: false
       });
       //@todo refactor hardcoded status for a proper enum
       const tableUpdated = await table.update(
@@ -290,7 +291,14 @@ module.exports = {
   // Update one
   async update(req, res) {
     try {
-      const { id, user_id, status, amount, deliver_time } = req.body;
+      const {
+        id,
+        user_id,
+        status,
+        amount,
+        deliver_time,
+        afterDeliverTime
+      } = req.body;
       const current_order = await order.findOne({
         where: { id }
       });
@@ -305,7 +313,11 @@ module.exports = {
           deliver_time:
             current_order.deliver_time === deliver_time
               ? current_order.deliver_time
-              : deliver_time
+              : deliver_time,
+          afterDeliverTime:
+            current_order.afterDeliverTime === afterDeliverTime
+              ? current_order.afterDeliverTime
+              : afterDeliverTime
         },
         { where: { id } }
       );

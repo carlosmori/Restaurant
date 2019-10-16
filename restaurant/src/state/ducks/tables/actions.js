@@ -1,4 +1,4 @@
-import {FETCH_TABLE, FETCH_ORDER_MENU, UPDATE_TABLE, TAKE_ORDER, DELIVER_ORDER, CLOSE_TABLE, CANCEL_ORDER} from './types'
+import {FETCH_TABLE, FETCH_ORDER_MENU, UPDATE_TABLE, TAKE_ORDER, DELIVER_ORDER, CLOSE_TABLE, CANCEL_ORDER, UPDATE_ORDER} from './types'
 
 export const fetchTables = () => ({
   type: FETCH_TABLE.REQUEST,
@@ -23,6 +23,10 @@ export const cancelOrder = payload => ({
   payload,
 })
 
+export const updateOrder = payload => ({
+  type: UPDATE_ORDER.REQUEST,
+  payload,
+})
 export const deliverOrder = payload => ({
   type: DELIVER_ORDER.REQUEST,
   payload,

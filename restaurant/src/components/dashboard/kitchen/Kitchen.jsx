@@ -81,7 +81,6 @@ const Kitchen = ({dispatchProduct, fetchPendingDishes, pendingOrders, dispatchOr
         const dispatchedProducts = pendingOrders[orderIndex].products
           .filter(product => product.id !== productId)
           .filter(product => !product.order_product.cancelled)
-        debugger
         const areAllProductsDispatched = dispatchedProducts.map(product => product.order_product.dispatched)
         if (areAllProductsDispatched.every(dispatched => !!dispatched)) {
           dispatchOrder({id: orderId, status: ORDER_STATUS_VALUE.READY_TO_DELIVER, productId})
@@ -93,7 +92,7 @@ const Kitchen = ({dispatchProduct, fetchPendingDishes, pendingOrders, dispatchOr
         const cancelledProducts = pendingOrders[orderIndex].products.filter(product => product.id !== productId)
         const areAllProductsCancelled = cancelledProducts.map(product => product.order_product.cancelled)
         if (areAllProductsCancelled.every(cancelled => !!cancelled)) {
-          cancelOrder({orderId, tableId: pendingOrders[orderIndex].tableId})
+          cancelOrder({orderId, currentOrder: pendingOrders[orderIndex]})
         }
         cancelProduct({orderId, productId})
         break

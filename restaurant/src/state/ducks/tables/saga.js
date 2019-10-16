@@ -1,8 +1,18 @@
 import {all, call, put, takeLatest} from 'redux-saga/effects'
-import {FETCH_TABLE, FETCH_ORDER_MENU, TAKE_ORDER, DELIVER_ORDER, CLOSE_TABLE, CANCEL_ORDER} from './types'
+import {
+  FETCH_TABLE,
+  FETCH_ORDER_MENU,
+  TAKE_ORDER,
+  DELIVER_ORDER,
+  CLOSE_TABLE,
+  CANCEL_ORDER,
+  UPDATE_ORDER,
+} from './types'
 import {axios} from '../../../utils/http/axios-singleton'
 import {DASHBOARD_LOADING, DASHBOARD_SNACKBAR} from '../dashboard/types'
 import {TABLE_STATUS_VALUE} from '../../../utils/enums/tableStatusEnum'
+import moment from 'moment'
+
 export function* fetchTables() {
   try {
     const response = yield call(fetchTableHttpCall)
@@ -46,12 +56,22 @@ export function* takeOrder(action) {
 }
 
 export function* cancelOrder(action) {
+  const {currentOrder, orderId} = action.payload
+  const {tableId, deliver_time} = currentOrder
+  const then = moment(new Date(deliver_time)).valueOf()
+  const now = moment().valueOf()
+  if (then - now < 0) {
+  }
   try {
     yield put({type: DASHBOARD_LOADING, payload: {loading: true}})
-    const response = yield call(cancelOrderHttpCall, action.payload)
+    const response = yield call(cancelOrderHttpCall, {tableId, orderId})
     yield put({
       type: CANCEL_ORDER.SUCCESS,
-      payload: action.payload,
+      payload: {tableId},
+    })
+    yield put({
+      type: UPDATE_ORDER.REQUEST,
+      payload: {afterDeliverTime: true, id: orderId},
     })
 
     yield put({type: DASHBOARD_LOADING, payload: {loading: false}})
@@ -100,12 +120,17 @@ export function* deliverOrder(action) {
   }
 }
 export function* closeTable(action) {
+  const {tableId} = action.payload.currentOrder
   try {
     yield put({type: DASHBOARD_LOADING, payload: {loading: true}})
-    yield call(closeTableHttpCall, {id: action.payload.tableId, status: TABLE_STATUS_VALUE.FREE, order_id: null})
+    yield call(closeTableHttpCall, {
+      id: tableId,
+      status: TABLE_STATUS_VALUE.FREE,
+      order_id: null,
+    })
     yield put({
       type: CLOSE_TABLE.SUCCESS,
-      payload: {tableId: action.payload.tableId},
+      payload: {tableId},
     })
 
     yield put({type: DASHBOARD_LOADING, payload: {loading: false}})
@@ -126,12 +151,23 @@ export function* closeTable(action) {
     })
   }
 }
+export function* updateOrder(action) {
+  try {
+    yield call(updateOrderHttpCall, action.payload)
+    yield put({
+      type: UPDATE_ORDER.SUCCESS,
+    })
+  } catch (error) {
+    yield put({type: UPDATE_ORDER.FAILED, payload: {error}})
+  }
+}
 const fetchTableHttpCall = () => axios.get(`/tables`)
 const fecthOrderMenuHttpCall = () => axios.get(`/products`)
 const takeOrderHttpCall = order => axios.post('/orders', {...order})
 const cancelOrderHttpCall = payload => axios.post('orders/cancelOrder', {...payload})
 const deliverOrderHttpCall = payload => axios.post('orders/deliverOrder', {...payload})
 const closeTableHttpCall = payload => axios.put(`/tables`, payload)
+const updateOrderHttpCall = payload => axios.put(`/orders`, payload)
 
 export default function* root() {
   yield all([
@@ -141,5 +177,6 @@ export default function* root() {
     takeLatest(CANCEL_ORDER.REQUEST, cancelOrder),
     takeLatest(DELIVER_ORDER.REQUEST, deliverOrder),
     takeLatest(CLOSE_TABLE.REQUEST, closeTable),
+    takeLatest(UPDATE_ORDER.REQUEST, updateOrder),
   ])
 }
