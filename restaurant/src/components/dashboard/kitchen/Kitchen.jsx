@@ -84,9 +84,10 @@ const Kitchen = ({dispatchProduct, fetchPendingDishes, pendingOrders, dispatchOr
         debugger
         const areAllProductsDispatched = dispatchedProducts.map(product => product.order_product.dispatched)
         if (areAllProductsDispatched.every(dispatched => !!dispatched)) {
-          dispatchOrder({id: orderId, status: ORDER_STATUS_VALUE.READY_TO_DELIVER})
+          dispatchOrder({id: orderId, status: ORDER_STATUS_VALUE.READY_TO_DELIVER, productId})
+        } else {
+          dispatchProduct({orderId, productId})
         }
-        dispatchProduct({orderId, productId})
         break
       case 'Cancel':
         const cancelledProducts = pendingOrders[orderIndex].products.filter(product => product.id !== productId)

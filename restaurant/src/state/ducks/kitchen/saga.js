@@ -2,7 +2,7 @@
  * @module Sagas/Session
  * @desc Session
  */
-import {all, put, call, takeLatest, fork} from 'redux-saga/effects'
+import {all, put, call, takeLatest} from 'redux-saga/effects'
 import {axios} from '../../../utils/http/axios-singleton'
 
 import {FETCH_PENDING_DISHES, DISPATCH_PRODUCT, DISPATCH_ORDER, CANCEL_PRODUCT} from './types'
@@ -27,10 +27,13 @@ export function* fetchPendingDishes(action) {
   }
 }
 export function* dispatchOrder(action) {
-    debugger;
-
+  const {productId} = action.payload
+  const orderId = action.payload.id
+  const productPayload = {payload: {productId, orderId}}
+  debugger
   try {
     yield put({type: DASHBOARD_LOADING, payload: {loading: true}})
+    yield call(dispatchProduct, productPayload)
     const response = yield call(dispatchOrderHttpCall, action.payload)
     yield put({
       type: DISPATCH_ORDER.SUCCESS,
@@ -55,7 +58,7 @@ export function* dispatchOrder(action) {
   }
 }
 export function* dispatchProduct(action) {
-  debugger;
+  debugger
   try {
     yield put({type: DASHBOARD_LOADING, payload: {loading: true}})
     const response = yield call(dispatchProductHttpCall, action.payload)
@@ -114,9 +117,9 @@ const fetchPendingDishesHttpCall = () => axios.get('/orders/pendingDishes')
 
 export default function* root() {
   yield all([
-    fork(FETCH_PENDING_DISHES.REQUEST, fetchPendingDishes),
-    fork(DISPATCH_PRODUCT.REQUEST, dispatchProduct),
-    fork(DISPATCH_ORDER.REQUEST, dispatchOrder),
-    fork(CANCEL_PRODUCT.REQUEST, cancelProduct),
+    takeLatest(FETCH_PENDING_DISHES.REQUEST, fetchPendingDishes),
+    takeLatest(DISPATCH_PRODUCT.REQUEST, dispatchProduct),
+    takeLatest(DISPATCH_ORDER.REQUEST, dispatchOrder),
+    takeLatest(CANCEL_PRODUCT.REQUEST, cancelProduct),
   ])
 }
