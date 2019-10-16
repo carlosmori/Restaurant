@@ -10,7 +10,8 @@ import {Snackbar as Snack} from '@material-ui/core/'
 import SnackbarContent from '@material-ui/core/SnackbarContent'
 import WarningIcon from '@material-ui/icons/Warning'
 import clsx from 'clsx'
-
+import {connect} from 'react-redux'
+import {toggleSnackbar} from '../../state/ducks/dashboard/actions'
 const variantIcon = {
   success: CheckCircleIcon,
   warning: WarningIcon,
@@ -46,15 +47,26 @@ const useStyles1 = makeStyles(theme => ({
 
 const Snackbar = props => {
   const [state, setState] = React.useState({
-    open: true,
+    open: false,
     vertical: 'bottom',
     horizontal: 'center',
   })
-
+  React.useEffect(() => {
+    if (props.snackbar.show) {
+      setState({...state, open: true})
+      setTimeout(() => {
+        handleClose()
+      }, 2000)
+    } else {
+      setState({...state, open: false})
+    }
+    return () => {}
+  }, [props.snackbar.show])
   const {vertical, horizontal, open} = state
 
   const handleClose = () => {
     setState({...state, open: false})
+    props.toggleSnackbar({show: false, message: '', variant: ''})
   }
 
   return (
@@ -63,23 +75,21 @@ const Snackbar = props => {
         anchorOrigin={{vertical, horizontal}}
         key={`${vertical},${horizontal}`}
         open={open}
-        autoHideDuration={3000}
         ContentProps={{
           'aria-describedby': 'message-id',
         }}
         message={<span id="message-id">{props.message}</span>}
       >
-        <MySnackbarContentWrapper onClose={handleClose} variant={props.variant} message={props.message} />
+        <MySnackbarContentWrapper onClose={handleClose} variant={props.snackbar.variant} message={props.snackbar.message} />
       </Snack>
     </div>
   )
 }
 
-function MySnackbarContentWrapper(props) {
+const MySnackbarContentWrapper = props => {
   const classes = useStyles1()
   const {message, onClose, variant} = props
-  const Icon = variantIcon[variant]
-
+  const Icon = variant ? variantIcon[variant] : CheckCircleIcon
   return (
     <SnackbarContent
       className={classes[variant]}
@@ -98,4 +108,10 @@ function MySnackbarContentWrapper(props) {
     />
   )
 }
-export default Snackbar
+const mapStateToProps = state => ({
+  snackbar: state.dashboard.snackbar,
+})
+export default connect(
+  mapStateToProps,
+  {toggleSnackbar}
+)(Snackbar)

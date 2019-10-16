@@ -6,7 +6,7 @@ import {all, put, call, takeLatest} from 'redux-saga/effects'
 import {axios} from '../../../utils/http/axios-singleton'
 
 import {FETCH_PENDING_DISHES, DISPATCH_PRODUCT, DISPATCH_ORDER, CANCEL_PRODUCT} from './types'
-import {DASHBOARD_SNACKBAR, DASHBOARD_LOADING} from '../dashboard/types'
+import {DASHBOARD_TOGGLE_SNACKBAR, DASHBOARD_LOADING} from '../dashboard/types'
 
 export function* fetchPendingDishes(action) {
   try {
@@ -21,7 +21,7 @@ export function* fetchPendingDishes(action) {
     yield put({type: FETCH_PENDING_DISHES.FAILED, payload: {error}})
     yield put({type: DASHBOARD_LOADING, payload: {loading: false}})
     yield put({
-      type: DASHBOARD_SNACKBAR,
+      type: DASHBOARD_TOGGLE_SNACKBAR,
       payload: {show: true, message: 'An error has occurred', variant: 'warning'},
     })
   }
@@ -40,7 +40,7 @@ export function* dispatchOrder(action) {
     })
     yield put({type: DASHBOARD_LOADING, payload: {loading: false}})
     yield put({
-      type: DASHBOARD_SNACKBAR,
+      type: DASHBOARD_TOGGLE_SNACKBAR,
       payload: {
         show: true,
         message: 'Order dispatched successfully',
@@ -51,7 +51,7 @@ export function* dispatchOrder(action) {
     yield put({type: DISPATCH_ORDER.FAILED, payload: {error}})
     yield put({type: DASHBOARD_LOADING, payload: {loading: false}})
     yield put({
-      type: DASHBOARD_SNACKBAR,
+      type: DASHBOARD_TOGGLE_SNACKBAR,
       payload: {show: true, message: 'An error has occurred', variant: 'warning'},
     })
   }
@@ -66,7 +66,7 @@ export function* dispatchProduct(action) {
     })
     yield put({type: DASHBOARD_LOADING, payload: {loading: false}})
     yield put({
-      type: DASHBOARD_SNACKBAR,
+      type: DASHBOARD_TOGGLE_SNACKBAR,
       payload: {
         show: true,
         message: 'Product dispatched successfully',
@@ -77,7 +77,7 @@ export function* dispatchProduct(action) {
     yield put({type: DISPATCH_PRODUCT.FAILED, payload: {error}})
     yield put({type: DASHBOARD_LOADING, payload: {loading: false}})
     yield put({
-      type: DASHBOARD_SNACKBAR,
+      type: DASHBOARD_TOGGLE_SNACKBAR,
       payload: {show: true, message: 'An error has occurred', variant: 'warning'},
     })
   }
@@ -92,7 +92,7 @@ export function* cancelProduct(action) {
     })
     yield put({type: DASHBOARD_LOADING, payload: {loading: false}})
     yield put({
-      type: DASHBOARD_SNACKBAR,
+      type: DASHBOARD_TOGGLE_SNACKBAR,
       payload: {
         show: true,
         message: 'Product cancelled successfully',
@@ -103,7 +103,7 @@ export function* cancelProduct(action) {
     yield put({type: CANCEL_PRODUCT.FAILED, payload: {error}})
     yield put({type: DASHBOARD_LOADING, payload: {loading: false}})
     yield put({
-      type: DASHBOARD_SNACKBAR,
+      type: DASHBOARD_TOGGLE_SNACKBAR,
       payload: {show: true, message: 'An error has occurred', variant: 'warning'},
     })
   }

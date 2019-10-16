@@ -1,4 +1,4 @@
-import {DASHBOARD_LOADING, DASHBOARD_SNACKBAR} from './types'
+import {DASHBOARD_LOADING, DASHBOARD_TOGGLE_SNACKBAR} from './types'
 const initialState = {
   snackbar: {show: false, message: '', variant: ''},
   displayLoadingDialog: false,
@@ -6,7 +6,7 @@ const initialState = {
 
 export default (state = initialState, {type, payload}) => {
   switch (type) {
-    case DASHBOARD_SNACKBAR:
+    case DASHBOARD_TOGGLE_SNACKBAR:
       const {show, message, variant} = payload
       return {
         ...state,

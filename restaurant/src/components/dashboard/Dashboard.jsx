@@ -28,11 +28,7 @@ function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
-      <Link
-        color="inherit"
-        href="https://www.linkedin.com/in/carlos-agustin-mori-765116128/"
-        target="_blank"
-      >
+      <Link color="inherit" href="https://www.linkedin.com/in/carlos-agustin-mori-765116128/" target="_blank">
         Carlos Agustin Mori
       </Link>{' '}
       {new Date().getFullYear()}
@@ -145,10 +141,7 @@ const Dashboard = props => {
   return (
     <div className={classes.root}>
       <CssBaseline />
-      <AppBar
-        position="absolute"
-        className={clsx(classes.appBar, open && classes.appBarShift)}
-      >
+      <AppBar position="absolute" className={clsx(classes.appBar, open && classes.appBarShift)}>
         <Toolbar className={classes.toolbar}>
           <IconButton
             edge="start"
@@ -159,13 +152,7 @@ const Dashboard = props => {
           >
             <MenuIcon />
           </IconButton>
-          <Typography
-            component="h1"
-            variant="h6"
-            color="inherit"
-            noWrap
-            className={classes.title}
-          >
+          <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
             {props.dashboardTitle}
           </Typography>
         </Toolbar>
@@ -200,12 +187,13 @@ const Dashboard = props => {
         </div>
 
         {props.displayLoadingDialog ? <LoadingDialog /> : null}
-        {props.snackbar.show ? (
+        {/* {props.snackbar.show ? (
           <Snackbar
             message={props.snackbar.message}
             variant={props.snackbar.variant}
           />
-        ) : null}
+        ) : null} */}
+        <Snackbar />
       </main>
     </div>
   )
@@ -213,7 +201,7 @@ const Dashboard = props => {
 
 const mapStateToProps = state => ({
   dashboardTitle: state.navigationList.currentTab,
-  snackbar: state.dashboard.snackbar,
+  // snackbar: state.dashboard.snackbar,
   displayLoadingDialog: state.dashboard.displayLoadingDialog,
 })
 export default connect(

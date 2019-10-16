@@ -9,7 +9,7 @@ import {
   UPDATE_ORDER,
 } from './types'
 import {axios} from '../../../utils/http/axios-singleton'
-import {DASHBOARD_LOADING, DASHBOARD_SNACKBAR} from '../dashboard/types'
+import {DASHBOARD_LOADING, DASHBOARD_TOGGLE_SNACKBAR} from '../dashboard/types'
 import {TABLE_STATUS_VALUE} from '../../../utils/enums/tableStatusEnum'
 import moment from 'moment'
 
@@ -42,14 +42,14 @@ export function* takeOrder(action) {
     })
     yield put({type: DASHBOARD_LOADING, payload: {loading: false}})
     yield put({
-      type: DASHBOARD_SNACKBAR,
+      type: DASHBOARD_TOGGLE_SNACKBAR,
       payload: {show: true, message: 'Order dispatched successfully', variant: 'success'},
     })
   } catch (error) {
     yield put({type: TAKE_ORDER.FAILED, payload: {error}})
     yield put({type: DASHBOARD_LOADING, payload: {loading: false}})
     yield put({
-      type: DASHBOARD_SNACKBAR,
+      type: DASHBOARD_TOGGLE_SNACKBAR,
       payload: {show: true, message: 'An error has occurred', variant: 'warning'},
     })
   }
@@ -76,7 +76,7 @@ export function* cancelOrder(action) {
 
     yield put({type: DASHBOARD_LOADING, payload: {loading: false}})
     yield put({
-      type: DASHBOARD_SNACKBAR,
+      type: DASHBOARD_TOGGLE_SNACKBAR,
       payload: {
         show: true,
         message: 'Order cancelled successfully',
@@ -87,7 +87,7 @@ export function* cancelOrder(action) {
     yield put({type: CANCEL_ORDER.FAILED, payload: {error}})
     yield put({type: DASHBOARD_LOADING, payload: {loading: false}})
     yield put({
-      type: DASHBOARD_SNACKBAR,
+      type: DASHBOARD_TOGGLE_SNACKBAR,
       payload: {show: true, message: 'An error has occurred', variant: 'warning'},
     })
   }
@@ -103,7 +103,7 @@ export function* deliverOrder(action) {
 
     yield put({type: DASHBOARD_LOADING, payload: {loading: false}})
     yield put({
-      type: DASHBOARD_SNACKBAR,
+      type: DASHBOARD_TOGGLE_SNACKBAR,
       payload: {
         show: true,
         message: 'Order delivered successfully',
@@ -114,7 +114,7 @@ export function* deliverOrder(action) {
     yield put({type: DELIVER_ORDER.FAILED, payload: {error}})
     yield put({type: DASHBOARD_LOADING, payload: {loading: false}})
     yield put({
-      type: DASHBOARD_SNACKBAR,
+      type: DASHBOARD_TOGGLE_SNACKBAR,
       payload: {show: true, message: 'An error has occurred', variant: 'warning'},
     })
   }
@@ -135,7 +135,7 @@ export function* closeTable(action) {
 
     yield put({type: DASHBOARD_LOADING, payload: {loading: false}})
     yield put({
-      type: DASHBOARD_SNACKBAR,
+      type: DASHBOARD_TOGGLE_SNACKBAR,
       payload: {
         show: true,
         message: 'Table closed successfully',
@@ -146,7 +146,7 @@ export function* closeTable(action) {
     yield put({type: CLOSE_TABLE.FAILED, payload: {error}})
     yield put({type: DASHBOARD_LOADING, payload: {loading: false}})
     yield put({
-      type: DASHBOARD_SNACKBAR,
+      type: DASHBOARD_TOGGLE_SNACKBAR,
       payload: {show: true, message: 'An error has occurred', variant: 'warning'},
     })
   }

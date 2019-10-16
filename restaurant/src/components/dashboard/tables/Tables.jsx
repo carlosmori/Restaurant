@@ -3,7 +3,6 @@ import Grid from '@material-ui/core/Grid'
 import {makeStyles} from '@material-ui/core/styles'
 import {connect} from 'react-redux'
 import {fetchTables, fetchOrderMenu} from '../../../state/ducks/tables/actions'
-import {showSnackbar} from '../../../state/ducks/dashboard/actions'
 import Table from './table/Table'
 import OrderMenu from './menu/OrderMenu'
 const useStyles = makeStyles(theme => ({
@@ -46,6 +45,5 @@ export default connect(
   {
     fetchTables,
     fetchOrderMenu,
-    showSnackbar,
   }
 )(Tables)

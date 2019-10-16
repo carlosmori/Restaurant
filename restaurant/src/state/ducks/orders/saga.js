@@ -2,7 +2,7 @@ import {all, put, call, takeLatest} from 'redux-saga/effects'
 import {axios} from '../../../utils/http/axios-singleton'
 
 import {FETCH_ORDERS} from './types'
-import {DASHBOARD_LOADING, DASHBOARD_SNACKBAR} from '../dashboard/types'
+import {DASHBOARD_LOADING, DASHBOARD_TOGGLE_SNACKBAR} from '../dashboard/types'
 
 export function* fetchOrders() {
   try {
@@ -17,7 +17,7 @@ export function* fetchOrders() {
     yield put({type: FETCH_ORDERS.FAILED, payload: {error}})
     yield put({type: DASHBOARD_LOADING, payload: {loading: false}})
     yield put({
-      type: DASHBOARD_SNACKBAR,
+      type: DASHBOARD_TOGGLE_SNACKBAR,
       payload: {show: true, message: 'An error has occurred', variant: 'warning'},
     })
   }

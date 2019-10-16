@@ -1,15 +1,6 @@
-import {DASHBOARD_TEST_ACTION, DASHBOARD_TEST_PLAIN_ACTION, SHOW_INFORMATIVE_DIALOG} from './types'
+import { DASHBOARD_TOGGLE_SNACKBAR } from "./types";
 
-//With payload
-export const dashboardTestAction = payload => ({
-  type: DASHBOARD_TEST_ACTION,
+export const toggleSnackbar = payload => ({
+  type: DASHBOARD_TOGGLE_SNACKBAR,
   payload,
-})
-export const showSnackbar = payload => ({
-  type: SHOW_INFORMATIVE_DIALOG,
-  payload,
-})
-//Without payload
-export const dashboardTestPlainAction = () => ({
-  type: DASHBOARD_TEST_PLAIN_ACTION,
 })
